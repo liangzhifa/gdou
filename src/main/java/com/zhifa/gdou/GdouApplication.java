@@ -11,6 +11,7 @@ public class GdouApplication {
 
         SpringApplication.run(GdouApplication.class, args);
         System.out.println("======================完成========================");
+
     }
 
 }
