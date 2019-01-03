@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 public class WxConnectController {
-
     /**
         bbaa76534524bfe6
      *  http://zhifa.free.idcfengye.com
@@ -35,10 +34,10 @@ public class WxConnectController {
         try {
             requestMap = WxService.parseRequest(request.getInputStream());
             System.out.println(requestMap);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
 }
