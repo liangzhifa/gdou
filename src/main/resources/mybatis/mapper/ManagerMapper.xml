@@ -15,7 +15,10 @@
     from manager
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="findByNameAndPassword" resultType="com.zhifa.gdou.model.Manager">
+      select * from manager where manager_name=#{managerName} and manager_password =#{managerPassword}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from manager
     where id = #{id,jdbcType=INTEGER}
   </delete>

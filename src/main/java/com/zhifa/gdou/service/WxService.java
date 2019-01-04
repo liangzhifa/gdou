@@ -52,10 +52,9 @@ public class WxService {
 
 
     /**
-     * 解析xml数据包
-     * @param is
+     *  解析数据包  解析为map
+     * @param is 流输入
      * @return
-     * by 罗召勇 Q群193557337
      */
     public static Map<String, String> parseRequest(InputStream is) {
         Map<String, String> map = new HashMap<>();

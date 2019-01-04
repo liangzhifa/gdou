@@ -1,6 +1,7 @@
 package com.zhifa.gdou.mapper;
 
 import com.zhifa.gdou.model.Manager;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface ManagerMapper {
 
     @Select("select * from manager")
     List<Manager> findAll();
+
+    Manager findByNameAndPassword(@Param("managerName") String managerName , @Param("managerPassword")String managerPassword);
 }
