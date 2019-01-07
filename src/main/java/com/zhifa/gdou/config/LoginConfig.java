@@ -16,13 +16,13 @@ public class LoginConfig implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String requestURI = httpServletRequest.getRequestURI();
         System.out.println(httpServletRequest.getRequestURI()+"============》preHandle");
-        HttpSession httpSession = httpServletRequest.getSession();
+       /* HttpSession httpSession = httpServletRequest.getSession();
         Manager manager= (Manager) httpSession.getAttribute("manager");
         if(ObjectUtils.isEmpty(manager)){
             httpServletResponse.sendRedirect("/manager/login");
             return false;
 
-        }
+        }*/
         return true;
     }
 

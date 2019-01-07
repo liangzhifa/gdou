@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>教师信息管理</title>
+    <style>
+        body{margin: 10px;}
+        .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+    </style>
+    <link rel="stylesheet" href="/layui/lib/layui/css/layui.css" media="all">
+    <script src="/jquery-easyui-1.3.3/jquery.min.js"></script>
+    <script src="/layui/lib/layui/layui.all.js"></script>
+
+
+</head>
+<body>
+
+<table  id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加信息</button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<!--/teacher/findAllTeachers
+    teacherName
+    teacherPassword
+
+    //biandan表单刷新
+table.reload('idTest', {
+  where: { //设定异步数据接口的额外参数，任意设
+    aaaaaa: 'xxx'
+    ,bbb: 'yyy'
+    //…
+  }
+  ,page: {
+    curr: 1 //重新从第 1 页开始
+  }
+});
+-->
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            ,url:'/teacher/findAllTeachers'
+            ,toolbar: '#toolbarDemo'
+           /* ,toolbar: 'default'*/
+           /* ,toolbar: true*/
+           /* ,toolbar:'default'*/
+            ,title: '用户数据表'
+            ,cols: [[
+                 {type:'radio', fixed: 'left'}
+                ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true }
+                ,{field:'teacherName', title:'用户名', width:120, edit: 'text'}
+                ,{field:'teacherPassword', title:'密码', width:180, edit: 'text' }
+                ,{field:'city', title:'城市', width:100}
+                ,{field:'sign', title:'签名'}
+                ,{field:'experience', title:'积分', width:80 }
+                ,{field:'ip', title:'IP', width:120}
+                ,{field:'logins', title:'登入次数', width:100 }
+                ,{field:'joinTime', title:'加入时间', width:120}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+            ]]
+            ,page: true
+
+        });
+
+        //监听头工具栏事件
+        table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'add':
+                    layer.msg('添加233');
+                    break;
+                case 'update':
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else if(data.length > 1){
+                        layer.msg('只能同时编辑一个');
+                    } else {
+                        layer.alert('编辑 [id]：'+ checkStatus.data[0].id);
+                    }
+                    break;
+                case 'delete':
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.msg('删除');
+                    }
+                    break;
+            };
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.prompt({
+                    formType: 2
+                    ,value: data.city
+                }, function(value, index){
+                    obj.update({
+                        city: value
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+
+</html>

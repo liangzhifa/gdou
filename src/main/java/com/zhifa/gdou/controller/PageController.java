@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/manager")
 public class PageController {
 
     /**
      * 跳转到登录页面
      * @return
      */
-    @RequestMapping("/manager/login")
+    @RequestMapping("/login")
     public String toManager_login(){
         return "manager_login";
     }
@@ -22,7 +23,7 @@ public class PageController {
      * @param httpSession
      * @return
      */
-    @RequestMapping("/manager/logout")
+    @RequestMapping("/logout")
     public String manager_out(HttpSession httpSession){
         httpSession.setAttribute("manager",null);
         return "manager_login";
@@ -33,7 +34,7 @@ public class PageController {
      * 跳转到管理员后台主页面
      * @return
      */
-    @RequestMapping("/manager/manager_main_page")
+    @RequestMapping("/manager_main_page")
     public String toManager_main_page(){
         return "manager_index";
     }
@@ -45,6 +46,12 @@ public class PageController {
     @RequestMapping("/welcomePage")
     public String toWelcomePage(){
         return "welcome";
+    }
+
+
+    @RequestMapping("/teacherInfo")
+    public String toTeacherInfo(){
+        return "teacherInfo";
     }
 
 

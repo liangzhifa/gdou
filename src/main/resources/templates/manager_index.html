@@ -9,27 +9,17 @@
     <script src="/jquery-easyui-1.3.3/jquery.min.js"></script>
     <script src="/layui/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="/layui/js/xadmin.js"></script>
-
+    <link rel="stylesheet" href="/layui/lib/layui/css/layui.css">
 
 
 </head>
 <body>
     <!-- 顶部开始 -->
     <div class="container">
-        <div class="logo"><a href="./index.html">家校服务后台</a></div>
+        <div class="logo"><a href="/manager/manager_main_page">家校服务后台</a></div>
         <div class="left_open">
             <i title="展开左侧栏" class="iconfont">&#xe699;</i>
         </div>
-        <ul class="layui-nav left fast-add" lay-filter="">
-          <li class="layui-nav-item">
-            <a href="javascript:;">+新增</a>
-            <dl class="layui-nav-child"> <!-- 二级菜单 -->
-              <dd><a onclick="x_admin_show('资讯','http://www.baidu.com')"><i class="iconfont">&#xe6a2;</i>资讯</a></dd>
-              <dd><a onclick="x_admin_show('图片','http://www.baidu.com')"><i class="iconfont">&#xe6a8;</i>图片</a></dd>
-               <dd><a onclick="x_admin_show('用户','http://www.baidu.com')"><i class="iconfont">&#xe6b8;</i>用户</a></dd>
-            </dl>
-          </li>
-        </ul>
         <ul class="layui-nav right" lay-filter="">
           <li class="layui-nav-item">
             <a href="javascript:;" id="adminId">admin</a>
@@ -54,9 +44,9 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a _href="member-list.html">
+                        <a _href="teacherInfo">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>会员列表</cite>
+                            <cite>教师信息</cite>
                             
                         </a>
                     </li >
@@ -98,7 +88,7 @@
           </ul>
           <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <iframe src='/welcomePage' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                <iframe src='/manager/welcomePage' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
             </div>
           </div>
         </div>
