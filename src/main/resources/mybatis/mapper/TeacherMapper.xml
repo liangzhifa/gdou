@@ -15,6 +15,7 @@
     from teacher
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from teacher
     where id = #{id,jdbcType=INTEGER}
@@ -68,4 +69,14 @@
       teacher_password = #{teacherPassword,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!--自定义sql实现-->
+  <select id="findAll" resultType="com.zhifa.gdou.model.Teacher">
+    select * from teacher
+    <where>
+      <if test="teacherName !=null and teacherName != ''">
+        and teacher_name like #{teacherName}
+      </if>
+    </where>
+
+  </select>
 </mapper>

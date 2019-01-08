@@ -13,7 +13,11 @@ public class TeacherService {
     @Autowired
     TeacherMapper teacherMapper;
 
-    public List<Teacher> findAllTeachers(){
-        return  teacherMapper.findAll();
+    public List<Teacher> findAllTeachers(String teacherName){
+        return  teacherMapper.findAll(teacherName);
+    }
+
+    public int deleteById(Integer id) {
+        return  teacherMapper.deleteByPrimaryKey(id);
     }
 }

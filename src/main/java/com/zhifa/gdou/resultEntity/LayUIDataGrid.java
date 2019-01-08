@@ -1,6 +1,5 @@
 package com.zhifa.gdou.resultEntity;
 
-import com.zhifa.gdou.model.Teacher;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -29,5 +28,8 @@ public class LayUIDataGrid implements Serializable {
         this.data = data;
         this.code=0;
         this.msg="请求成功！";
+    }
+    public static LayUIDataGrid ReturnDataGrid(long count, List data){
+        return new LayUIDataGrid(count,data);
     }
 }

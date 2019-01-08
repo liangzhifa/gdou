@@ -15,7 +15,7 @@ public class LoginConfig implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String requestURI = httpServletRequest.getRequestURI();
-        System.out.println(httpServletRequest.getRequestURI()+"============》preHandle");
+        //System.out.println(httpServletRequest.getRequestURI()+"============》preHandle");
        /* HttpSession httpSession = httpServletRequest.getSession();
         Manager manager= (Manager) httpSession.getAttribute("manager");
         if(ObjectUtils.isEmpty(manager)){
@@ -29,11 +29,11 @@ public class LoginConfig implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
 
-        System.out.println("============postHandle");
+       // System.out.println("============postHandle");
     }
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-        System.out.println("============afterCompletion");
+       // System.out.println("============afterCompletion");
     }
 }

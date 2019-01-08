@@ -14,8 +14,15 @@
 
 </head>
 <body>
-
-<table  id="test" lay-filter="test"></table>
+<blockquote class="layui-elem-quote">教师信息管理:教师信息的CRUD功能，可选择显示列，导出、打印教师信息</blockquote>
+<div class="demoTable">
+    教师名字：
+    <div class="layui-inline">
+        <input class="layui-input" name="teacherName" id="demoReload" autocomplete="on" onkeydown="keyup_submit(event);">
+    </div>
+    <button class="layui-btn" data-type="reload" lay-event="reload" id="search">搜索</button>
+</div>
+<table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
@@ -24,7 +31,7 @@
 </script>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+   <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
@@ -60,17 +67,16 @@ table.reload('idTest', {
            /* ,toolbar:'default'*/
             ,title: '用户数据表'
             ,cols: [[
-                 {type:'radio', fixed: 'left'}
-                ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true }
-                ,{field:'teacherName', title:'用户名', width:120, edit: 'text'}
-                ,{field:'teacherPassword', title:'密码', width:180, edit: 'text' }
-                ,{field:'city', title:'城市', width:100}
-                ,{field:'sign', title:'签名'}
-                ,{field:'experience', title:'积分', width:80 }
-                ,{field:'ip', title:'IP', width:120}
-                ,{field:'logins', title:'登入次数', width:100 }
-                ,{field:'joinTime', title:'加入时间', width:120}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+                 {field:'id', title:'ID', width:80, fixed: 'left', unresize: true , align: 'center'}
+                ,{field:'teacherName', title:'用户名', width:120 , align: 'center' }
+                ,{field:'teacherPassword', title:'密码', width:180  , align: 'center' }
+                ,{field:'city', title:'城市', width:100, align: 'center'}
+                ,{field:'sign', title:'签名', align: 'center'}
+                ,{field:'experience', title:'积分', width:80 , align: 'center'}
+                ,{field:'ip', title:'IP', width:120, align: 'center',hide:'true'}
+                ,{field:'logins', title:'登入次数', width:100 , align: 'center'}
+                ,{field:'joinTime', title:'加入时间', width:120, align: 'center'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150 , align: 'center'}
             ]]
             ,page: true
 
@@ -84,7 +90,7 @@ table.reload('idTest', {
                 case 'add':
                     layer.msg('添加233');
                     break;
-                case 'update':
+                /*case 'update':
                     if(data.length === 0){
                         layer.msg('请选择一行');
                     } else if(data.length > 1){
@@ -100,33 +106,97 @@ table.reload('idTest', {
                         layer.msg('删除');
                     }
                     break;
+                case 'reload':
+                    //layer.msg('23333333333333');
+                    var demoReload = $('#demoReload');
+                    var param=demoReload.val();
+                    //执行重载
+                    table.reload('test', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        ,where: {
+                            teacherName: param
+                        }
+                    });
+
+                    demoReload.val(param);
+                    console.log(param);
+                    break;*/
             };
         });
 
         //监听行工具事件
-        table.on('tool(test)', function(obj){
-            var data = obj.data;
-            //console.log(obj)
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    obj.del();
-                    layer.close(index);
-                });
-            } else if(obj.event === 'edit'){
-                layer.prompt({
-                    formType: 2
-                    ,value: data.city
-                }, function(value, index){
-                    obj.update({
-                        city: value
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                ,layEvent = obj.event; //获得 lay-event 对应的值
+            //console.log(data.id);
+            if(layEvent === 'detail'){
+                layer.msg('查看操作: '+JSON.stringify(data));
+            } else if(layEvent === 'del'){
+                //  <span class="layui-badge layui-bg-blue">蓝</span>
+                layer.confirm('真的删除工号:<span class="layui-badge layui-bg-blue">'+data.id+'</span> ,名字:<span class="layui-badge layui-bg-blue">'+data.teacherName+'</span> 的老师吗?', function(index){
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url:"/teacher/deleteById",
+                        type:"post",
+                        data:{id:data.id},
+                        success:function(result){
+                            if(result.status){
+                                obj.del(); //删除对应行（tr）的DOM结构
+                                layer.close(index);
+                            }else {
+                                layer.msg( result.msg);
+                            }
+                        },
+                        error:function(e){
+                            layer.msg('错误！！');
+                        }
                     });
-                    layer.close(index);
+                });
+            } else if(layEvent === 'edit'){
+                layer.msg('编辑操作');
+            }
+        });
+
+        //搜索框
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#demoReload');
+                //执行重载
+                table.reload('test', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        teacherName: demoReload.val()
+
+                    }
                 });
             }
+        };
+
+        $('#search').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
         });
     });
 </script>
 
 </body>
-
+<script>
+ /*   function EnterPress(e) { //传入 event
+        var e = e || window.event;
+        if (e.keyCode == 13) {
+            $("#search").click();
+        }
+    }*/
+    function keyup_submit(e){
+        var evt = window.event || e;
+        if (evt.keyCode == 13){
+            //回车事件
+            $("#search").click();
+        }
+    }
+</script>
 </html>

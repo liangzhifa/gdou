@@ -1,7 +1,7 @@
 package com.zhifa.gdou.mapper;
 
 import com.zhifa.gdou.model.Teacher;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,6 +18,10 @@ public interface TeacherMapper {
 
     int updateByPrimaryKey(Teacher record);
 
-    @Select(value = " select * from teacher")
-    List<Teacher> findAll();
+    /**
+     * genju根据条件查询教师
+     * @param teacherName
+     * @return
+     */
+    List<Teacher> findAll(@Param(value = "teacherName") String teacherName);
 }
