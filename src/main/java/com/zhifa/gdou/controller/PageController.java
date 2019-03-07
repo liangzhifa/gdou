@@ -9,6 +9,8 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/manager")
 public class PageController {
 
+
+
     /**
      * 跳转到登录页面
      * @return

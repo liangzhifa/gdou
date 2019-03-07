@@ -1,0 +1,81 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>微信号绑定学号</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="stylesheet" href="/amazeui/css/amazeui.min.css">
+  <link rel="stylesheet" href="/amazeui/css/app.css">
+</head>
+<body>
+<div class="am-g">
+	<!-- LOGO -->
+	<div class="am-u-sm-12 am-text-center" >
+		 <img src="/amazeui/css/gdou.jpg">
+	</div>
+	<!-- 登陆框 -->
+	<div class="am-u-sm-11 am-u-sm-centered">
+	<form class="am-form">
+	  <fieldset class="myapp-login-form am-form-set">
+		<div class="am-form-group am-form-icon">
+			<i class="am-icon-user"></i>
+			<input type="text" id="studentNum" class="myapp-login-input-text am-form-field" placeholder="请输入您的学号">
+		</div>
+	    <div class="am-form-group am-form-icon">
+			<i class="am-icon-lock"></i>
+			<input type="password" id="studentPass" class="myapp-login-input-text am-form-field" placeholder="学号对应的密码">
+		</div>
+	  </fieldset>
+	  <button type="button" onclick="login()" class="myapp-login-form-submit am-btn am-btn-primary am-btn-block ">登 录</button>
+	</form>
+	</div>
+
+</div>
+
+<script src="/amazeui/js/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+
+<script src="/amazeui/js/amazeui.min.js"></script>
+<script src="/amazeui/js/app.js"></script>
+<script type="text/javascript">
+    function login() {
+        if ($('#studentNum').val()==""){
+            alert("请正确填写学号");
+            return;
+        }
+        if ($('#studentPass').val()==""){
+            alert("请正确填写密码");
+            return;
+        }
+        $.ajax({
+            url:"/wx/student_login",
+            type:"post",
+            data:{studentNum:$('#studentNum').val(),studentPass:$('#studentPass').val()},
+            success:function(result){
+               // var result=eval('('+result+')');
+                console.log(result);
+               // alert(result);
+
+                if(result.code==0){
+
+                   window.location=result.url;
+                }else {
+                    alert(result.msg);
+                }
+            },
+            error:function(e){
+                alert("错误！！");
+
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

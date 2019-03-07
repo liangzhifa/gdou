@@ -3,16 +3,27 @@ server:
   context-path: /
 spring:
   datasource:
-    url: jdbc:mysql://47.100.45.101:3306/liangzhifa?serverTimezone=Asia/Shanghai&useAffectedRows=true&useSSL=true
-    username: root
+    url: jdbc:mysql://47.100.45.101:3306/liangzhifa?serverTimezone=Asia/Shanghai&useAffectedRows=true&useSSL=true&characterEncoding=utf8
     password: zhifa123
     driver-class-name: com.mysql.jdbc.Driver
+    username: root
   thymeleaf:
     cache: false
     mode: LEGACYHTML5
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations:
     - classpath:mybatis/mapper/*
 pagehelper:
   auto-dialect: mysql
+wx:
+  appid: wx44e91599e99be24a
+  token: zhifa
+  appsecret: eff5d9f3261d0b0b8337a77d2feae95c
+  path: /zhifa
+  callback-url: http://7fvxfs.natappfree.cc
+  #callback-domain: http://fzft8c.natappfree.cc
+
