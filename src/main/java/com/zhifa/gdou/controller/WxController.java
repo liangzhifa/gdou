@@ -61,13 +61,29 @@ public class WxController {
     @WxButton(type = WxButton.Type.CLICK,
             group = WxButton.Group.LEFT,
             order = WxButton.Order.FIRST,
-            name = "文本消息")
+            name = "消息tips")
     public String leftFirst(WxRequest wxRequest, WxUser wxUser) {
         //log.info("wxRequest=>{}",wxRequest);
         log.info("wxUser=>{}",wxUser);
       /*  WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
         int insert = wxUserAttentionMapper.insert(wxUserAttention);*/
-        return wxUser.getNickName()+"  你好啊！/:rose";
+        return wxUser.getNickName()+"  你好啊！/:rose \n"
+                                +"家长留言格式(#内容)\n"
+                                +"教师群发家庭作业($内容)";
+    }
+    /**
+     * 定义微信菜单，并接受事件
+     */
+    @WxButton(type = WxButton.Type.CLICK,
+            group = WxButton.Group.LEFT,
+            order = WxButton.Order.SECOND,
+            name = "留言回复")
+    public String leftSECOND(WxRequest wxRequest, WxUser wxUser) {
+        //log.info("wxRequest=>{}",wxRequest);
+        log.info("wxUser=>{}",wxUser);
+      /*  WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
+        int insert = wxUserAttentionMapper.insert(wxUserAttention);*/
+        return wxUser.getNickName()+"  留言回复：";
     }
 
 
@@ -93,7 +109,7 @@ public class WxController {
      */
     @WxButton(type = WxButton.Type.VIEW,
             group = WxButton.Group.LEFT,
-            order = WxButton.Order.SECOND,
+            order = WxButton.Order.THIRD,
             url = "/wx/main",
             name = "学生相关")
     @WxAsyncMessage
@@ -113,6 +129,15 @@ public class WxController {
             name="翻译工具")
     @WxAsyncMessage
     public void youdaofanyi(WxRequest wxRequest){
+    }
+
+    @WxButton(type =WxButton.Type.VIEW,
+            group = WxButton.Group.RIGHT,
+            order = WxButton.Order.SECOND,
+            url = "http://www.gdou.edu.cn/",
+            name="教务处")
+    @WxAsyncMessage
+    public void guanwang(WxRequest wxRequest){
     }
 
 
@@ -181,10 +206,23 @@ public class WxController {
      * @param content
      * @return the result
      */
-    @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "2*")
+    @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "#*")
     @WxAsyncMessage
     public String text2(WxRequestBody.Text text, String content) {
         boolean match = text.getContent().equals(content);
-        return "收到消息内容为" + content + "!结果匹配！" + match;
+
+        return "收到消息内容为" + content + "!结果匹配！" + match+"给班主任留言";
+    }
+    /**
+     * 接受用户文本消息，异步返回文本消息
+     * @param content
+     * @return the result
+     */
+    @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "$*")
+    @WxAsyncMessage
+    public String texttask(WxRequestBody.Text text, String content) {
+        boolean match = text.getContent().equals(content);
+
+        return "收到消息内容为" + content + "!结果匹配！" + match+"发布家庭作业";
     }
 }

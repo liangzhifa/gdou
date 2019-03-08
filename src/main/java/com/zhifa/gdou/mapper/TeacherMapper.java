@@ -17,7 +17,6 @@ public interface TeacherMapper {
     int updateByPrimaryKeySelective(Teacher record);
 
     int updateByPrimaryKey(Teacher record);
-
     /**
      * genju根据条件查询教师
      * @param teacherName

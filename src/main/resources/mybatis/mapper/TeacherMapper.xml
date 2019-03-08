@@ -3,11 +3,14 @@
 <mapper namespace="com.zhifa.gdou.mapper.TeacherMapper" >
   <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.Teacher" >
     <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="teacher_num" property="teacherNum" jdbcType="VARCHAR" />
     <result column="teacher_name" property="teacherName" jdbcType="VARCHAR" />
     <result column="teacher_password" property="teacherPassword" jdbcType="VARCHAR" />
+    <result column="openId" property="openid" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, teacher_name, teacher_password
+    id, teacher_num, teacher_name, teacher_password, openId, state
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -15,15 +18,16 @@
     from teacher
     where id = #{id,jdbcType=INTEGER}
   </select>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from teacher
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.zhifa.gdou.model.Teacher" >
-    insert into teacher (id, teacher_name, teacher_password
+    insert into teacher (id, teacher_num, teacher_name, 
+      teacher_password, openId, state
       )
-    values (#{id,jdbcType=INTEGER}, #{teacherName,jdbcType=VARCHAR}, #{teacherPassword,jdbcType=VARCHAR}
+    values (#{id,jdbcType=INTEGER}, #{teacherNum,jdbcType=VARCHAR}, #{teacherName,jdbcType=VARCHAR}, 
+      #{teacherPassword,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.zhifa.gdou.model.Teacher" >
@@ -32,16 +36,28 @@
       <if test="id != null" >
         id,
       </if>
+      <if test="teacherNum != null" >
+        teacher_num,
+      </if>
       <if test="teacherName != null" >
         teacher_name,
       </if>
       <if test="teacherPassword != null" >
         teacher_password,
       </if>
+      <if test="openid != null" >
+        openId,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
+      </if>
+      <if test="teacherNum != null" >
+        #{teacherNum,jdbcType=VARCHAR},
       </if>
       <if test="teacherName != null" >
         #{teacherName,jdbcType=VARCHAR},
@@ -49,24 +65,42 @@
       <if test="teacherPassword != null" >
         #{teacherPassword,jdbcType=VARCHAR},
       </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=TINYINT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.zhifa.gdou.model.Teacher" >
     update teacher
     <set >
+      <if test="teacherNum != null" >
+        teacher_num = #{teacherNum,jdbcType=VARCHAR},
+      </if>
       <if test="teacherName != null" >
         teacher_name = #{teacherName,jdbcType=VARCHAR},
       </if>
       <if test="teacherPassword != null" >
         teacher_password = #{teacherPassword,jdbcType=VARCHAR},
       </if>
+      <if test="openid != null" >
+        openId = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.zhifa.gdou.model.Teacher" >
     update teacher
-    set teacher_name = #{teacherName,jdbcType=VARCHAR},
-      teacher_password = #{teacherPassword,jdbcType=VARCHAR}
+    set teacher_num = #{teacherNum,jdbcType=VARCHAR},
+      teacher_name = #{teacherName,jdbcType=VARCHAR},
+      teacher_password = #{teacherPassword,jdbcType=VARCHAR},
+      openId = #{openid,jdbcType=VARCHAR},
+      state = #{state,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <!--自定义sql实现-->
