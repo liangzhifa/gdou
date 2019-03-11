@@ -15,6 +15,16 @@ public class Teacher implements Serializable {
 
     private Byte state;
 
+    private String className;
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
     public Integer getId() {
         return id;
     }

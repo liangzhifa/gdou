@@ -23,6 +23,56 @@
     <button class="layui-btn" data-type="reload" lay-event="reload" id="search">搜索</button>
 </div>
 <table class="layui-hide" id="test" lay-filter="test"></table>
+<div id="add-main" style="display: none;">
+    <form class="layui-form" id="add-form"  action="">
+        <div class="layui-form-item center" >
+            <div class="layui-input-block">
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >教师名称</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="teacherName" required placeholder="请输入教师名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="add-modofy" style="display: none;">
+    <form class="layui-form" id="modify-form"  action="">
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >教 师：</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" disabled id="teachNo" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >更改密码：</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="teacherPassword" required placeholder="新密码：" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >班主任：</label>
+            <div class="layui-input-block">
+                <select id="selectID" style="width: 320px;"  name="headMasterNum" class="layui-input"></select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formmodify">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="modifyReset">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
@@ -55,6 +105,7 @@ table.reload('idTest', {
 -->
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
+    var modifyData='';
     layui.use('table', function(){
         var table = layui.table;
 
@@ -68,11 +119,12 @@ table.reload('idTest', {
             ,title: '用户数据表'
             ,cols: [[
                  {field:'id', title:'ID', width:80, fixed: 'left', unresize: true , align: 'center'}
-                ,{field:'teacherNum', title:'教师编号', width:120 , align: 'center' }
-                ,{field:'teacherName', title:'教师名字', width:180  , align: 'center' }
-                ,{field:'teacherPassword', title:'登录密码', width:100, align: 'center'}
+                ,{field:'teacherNum', title:'教师编号', width:150 , align: 'center' }
+                ,{field:'teacherName', title:'教师名字', width:100  , align: 'center' }
+                ,{field:'teacherPassword', title:'登录密码', width:150, align: 'center'}
+                ,{field:'className', title:'班主任', width:100, align: 'center'}
                 ,{field:'openid', title:'微信id',width:400, align: 'center'}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150 , align: 'center'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:120 , align: 'center'}
             ]]
             ,page: true
 
@@ -84,41 +136,42 @@ table.reload('idTest', {
                 ,data = checkStatus.data; //获取选中的数据
             switch(obj.event){
                 case 'add':
-                    layer.msg('添加233');
-                    break;
-                /*case 'update':
-                    if(data.length === 0){
-                        layer.msg('请选择一行');
-                    } else if(data.length > 1){
-                        layer.msg('只能同时编辑一个');
-                    } else {
-                        layer.alert('编辑 [id]：'+ checkStatus.data[0].id);
-                    }
-                    break;
-                case 'delete':
-                    if(data.length === 0){
-                        layer.msg('请选择一行');
-                    } else {
-                        layer.msg('删除');
-                    }
-                    break;
-                case 'reload':
-                    //layer.msg('23333333333333');
-                    var demoReload = $('#demoReload');
-                    var param=demoReload.val();
-                    //执行重载
-                    table.reload('test', {
-                        page: {
-                            curr: 1 //重新从第 1 页开始
+                    //layer.msg('添加233');
+                    //页面层-自定义
+                    insertVar=layer.open({
+                        type: 1,
+                        title:"登记信息",
+                        // closeBtn: true,
+                        shift: 2,
+                        area: ['500px', '300px'],
+                        shadeClose: true,
+                        //btn: ['新增', '取消'],
+                        // btnAlign: 'c',
+                        content: $("#add-main"),
+                        yes: function(index, layero){
+                            //do something
+
+                            return false;
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            $("#add-main").css("display","none");
                         }
-                        ,where: {
-                            teacherName: param
+                        ,btn2: function(index, layero){
+                            //按钮【按钮二】的回调
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            $("#add-main").css("display","none");
+                            //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                        ,cancel: function(index, layero){
+                            /* if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭
+                                 layer.close(index);
+                                 $("#add-main").css("display","none");
+                             }*/
+                            layer.close(index);
+                            $("#add-main").css("display","none");
+                            return false;
                         }
                     });
-
-                    demoReload.val(param);
-                    console.log(param);
-                    break;*/
+                    break;
             };
         });
 
@@ -131,7 +184,7 @@ table.reload('idTest', {
                 layer.msg('查看操作: '+JSON.stringify(data));
             } else if(layEvent === 'del'){
                 //  <span class="layui-badge layui-bg-blue">蓝</span>
-                layer.confirm('真的删除工号:<span class="layui-badge layui-bg-blue">'+data.id+'</span> ,名字:<span class="layui-badge layui-bg-blue">'+data.teacherName+'</span> 的老师吗?', function(index){
+                layer.confirm('真的删除工号:<span class="layui-badge layui-bg-blue">'+data.teacherNum+'</span> ,名字:<span class="layui-badge layui-bg-blue">'+data.teacherName+'</span> 的老师吗?', function(index){
                     //向服务端发送删除指令
                     $.ajax({
                         url:"/teacher/deleteById",
@@ -151,7 +204,30 @@ table.reload('idTest', {
                     });
                 });
             } else if(layEvent === 'edit'){
-                layer.msg('编辑操作');
+                //layer.msg('编辑操作');
+                modifyData=data;
+                $("#teachNo").val(data.teacherName);
+                modifyVar=layer.open({
+                    type: 1,
+                    title:"修改信息",
+                    // closeBtn: true,
+                    shift: 2,
+                    area: ['500px', '400px'],
+                    shadeClose: true,
+                    //btn: ['新增', '取消'],
+                    // btnAlign: 'c',
+                    content: $("#add-modofy"),
+                    cancel: function(index, layero){
+                    /* if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭
+                         layer.close(index);
+                         $("#add-main").css("display","none");
+                     }*/
+                    layer.close(modifyVar);
+                    $("#add-modofy").css("display","none");
+                    return false;
+                }
+                });
+
             }
         });
 
@@ -175,6 +251,91 @@ table.reload('idTest', {
         $('#search').on('click', function(){
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
+        });
+    });
+    layui.use('form', function(){
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+        //……
+        //但是，如果你的HTML是动态生成的，自动渲染就会失效
+        //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();
+        form.render();
+        $.ajax({
+            url:'/classInfo/getClassName',
+            dataType:'json',
+            type:'post',
+            success:function(data){
+                $.each(data,function(index,item){
+                    $('#selectID').append(new Option(item.name,item.id));//往下拉菜单里添加元素
+                })
+                form.render();//菜单渲染 把内容加载进去
+            }
+        });
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            console.log(JSON.stringify(data.field));
+            /*提交表单*/
+            $.ajax({
+                url:'/teacher/insertTeacherInfo',
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    console.log(res);
+                    if(res.code==0){
+                        layer.msg(res.msg);
+                        layer.close(insertVar); //如果设定了yes回调，需进行手工关闭
+                        $("#add-modofy").css("display","none");
+                        //刷新表单
+                        layui.table.reload('test', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                    }
+                    else{
+                        console.log(res.msg);
+                        layer.msg(res.msg);
+                    }
+                },
+                error:function(data){
+                    layer.msg("服务器错误");
+                }
+            });
+            return false;//如果不加这句，则ajax的回调函数不执行
+        });
+        form.on('submit(formmodify)', function(data){
+            $('#modifyReset').trigger("click");
+            console.log(JSON.stringify(data.field));
+            /*提交表单*/
+            $.ajax({
+                url:'/teacher/modify',
+                method:'post',
+                data:{className:data.field.headMasterNum,teacherPassword:data.field.teacherPassword,
+                      teacherNum:modifyData.teacherNum,id:modifyData.id},
+                dataType:'JSON',
+                success:function(res){
+                    console.log(res);
+                    if(res.code==0){
+                        layer.msg(res.msg);
+                        layer.close(modifyVar);//如果设定了yes回调，需进行手工关闭
+                        $("#add-main").css("display","none");
+                        //刷新表单
+                        layui.table.reload('test', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                    }
+                    else{
+                        console.log(res.msg);
+                        layer.msg(res.msg);
+                    }
+                },
+                error:function(data){
+                    layer.msg("服务器错误");
+                }
+            });
+            return false;//如果不加这句，则ajax的回调函数不执行
         });
     });
 </script>

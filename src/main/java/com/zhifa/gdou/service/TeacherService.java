@@ -18,6 +18,8 @@ public class TeacherService {
     }
 
     public int deleteById(Integer id) {
-        return  teacherMapper.deleteByPrimaryKey(id);
+        int i = teacherMapper.UpdateTeacherState(id, new Byte("1"));
+        System.out.println();
+        return i;
     }
 }

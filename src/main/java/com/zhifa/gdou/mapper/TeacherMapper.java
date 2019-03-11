@@ -23,4 +23,6 @@ public interface TeacherMapper {
      * @return
      */
     List<Teacher> findAll(@Param(value = "teacherName") String teacherName);
+
+    int UpdateTeacherState(@Param("id") Integer id, @Param("state") Byte state);
 }

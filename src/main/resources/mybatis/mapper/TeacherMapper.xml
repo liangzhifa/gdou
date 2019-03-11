@@ -103,6 +103,11 @@
       state = #{state,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="UpdateTeacherState">
+     update teacher
+     set state=0
+     where id=#{id}
+  </update>
   <!--自定义sql实现-->
   <select id="findAll" resultType="com.zhifa.gdou.model.Teacher">
     select * from teacher
@@ -110,6 +115,7 @@
       <if test="teacherName !=null and teacherName != ''">
         and teacher_name like #{teacherName}
       </if>
+      and  state=1
     </where>
 
   </select>
