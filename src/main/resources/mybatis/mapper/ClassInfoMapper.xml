@@ -25,6 +25,11 @@
      select distinct class_name from class_info
   </select>
 
+  <select id="findStuNum" resultType="string">
+    select distinct studentNum from class_info
+    where head_master_num=#{headMasterNum}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from class_info
     where id = #{id,jdbcType=INTEGER}
@@ -103,4 +108,5 @@
     set head_master_num =#{head_master_num}
     where class_name=#{class_name}
   </update>
+
 </mapper>

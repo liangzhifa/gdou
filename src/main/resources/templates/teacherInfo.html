@@ -85,26 +85,36 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
-
-
-<!--/teacher/findAllTeachers
-    teacherName
-    teacherPassword
-
-    //biandan表单刷新
-table.reload('idTest', {
-  where: { //设定异步数据接口的额外参数，任意设
-    aaaaaa: 'xxx'
-    ,bbb: 'yyy'
-    //…
-  }
-  ,page: {
-    curr: 1 //重新从第 1 页开始
-  }
-});
--->
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
+    var insertVar;
+    /*layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#dateSearch' //指定元素
+            //,type: 'year'
+            ,done: function(value, date, endDate){
+                console.log(value); //得到日期生成的值，如：2017-08-18
+                // todo 重新刷表单
+                var tableSearch = layui.table;
+                //执行重载
+                tableSearch.reload('test', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        insured_year: value
+                    }
+                });
+            }
+        });
+        laydate.render({
+            elem:'#insuredYear'
+            // ,type: 'year'
+        });
+    });*/
     var modifyData='';
     layui.use('table', function(){
         var table = layui.table;

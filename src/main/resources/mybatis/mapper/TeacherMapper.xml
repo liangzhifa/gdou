@@ -119,4 +119,8 @@
     </where>
 
   </select>
+  <select id="selectByNameAndPass" resultType="com.zhifa.gdou.model.Teacher">
+     select * from teacher
+     where teacher_num=#{teacherNum} and teacher_password=#{teacherPassword}
+  </select>
 </mapper>

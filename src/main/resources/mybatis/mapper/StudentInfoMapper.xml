@@ -25,6 +25,10 @@
          SELECT * FROM student_info
          WHERE studentNum=#{studentNum} and studentPass=#{studentPass}
     </select>
+    <select id="findNameByNum" resultType="string">
+      SELECT  studentName FROM student_info
+      WHERE studentNum=#{studentNum}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from student_info
     where id = #{id,jdbcType=INTEGER}

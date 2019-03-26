@@ -20,5 +20,7 @@ public interface StudentInfoMapper {
 
     StudentInfo selectByStudentNumAndStudentPass(@Param("studentNum") String studentNum, @Param("studentPass") String studentPass);
 
+    String findNameByNum(@Param("studentNum") String studentNum);
+
 
 }

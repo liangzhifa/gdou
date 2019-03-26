@@ -21,5 +21,13 @@ public interface ClassInfoMapper {
     String findClassNameByheadMasterNum(@Param("headMasterNum") String headMasterNum);
 
     List<String> findAllClassName();
+
+    /*
+    * 修改班主任
+    * */
     int updatehead_master_numByclass_name(@Param("class_name") String class_name, @Param("head_master_num") String head_master_num);
+
+    /*根据班主任id 查询班主任下面的学生
+    * */
+    List<String>findStuNum(@Param("headMasterNum") String headMasterNum);
 }

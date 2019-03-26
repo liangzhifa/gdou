@@ -11,7 +11,7 @@ spring:
     cache: false
     mode: LEGACYHTML5
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd
     time-zone: GMT+8
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,27 @@ public class TeacherController {
     TeacherMapper teacherMapper;
     @Autowired
     ClassInfoMapper classInfoMapper;
+
+    @RequestMapping("/login")
+    public Object login(String teacherNum, String teacherPassword, HttpSession httpSession){
+        Map<String,Object> map=new HashMap<>();
+        if (ObjectUtils.isEmpty(teacherNum)||ObjectUtils.isEmpty(teacherPassword)){
+            map.put("code", 1);
+            map.put("msg","账号、密码不能空");
+            return map;
+        }
+        Teacher teacher = teacherMapper.selectByNameAndPass(teacherNum, teacherPassword);
+        if (teacher==null){
+            map.put("code", 1);
+            map.put("msg","账号、密码不正确");
+            return map;
+        }
+        map.put("code", 0);
+        map.put("url","/main.html");
+        httpSession.setAttribute("teacher",teacher);
+        return map;
+
+    }
 
     @RequestMapping(value = "/findAllTeachers")
     public LayUIDataGrid findAllTeachers(@RequestParam(value = "page",defaultValue = "1") Integer page,
@@ -50,7 +72,6 @@ public class TeacherController {
         }
         return LayUIDataGrid.ReturnDataGrid(total,list);
     }
-
     @RequestMapping("/deleteById")
     public Object deleteById(Integer id){
         int n=teacherService.deleteById(id);
@@ -63,7 +84,6 @@ public class TeacherController {
         map.put("msg","删除失败，请重试！");
         return map;
     }
-
     @RequestMapping("/insertTeacherInfo")
     public Object insertTeacherInfo(String teacherName){
         Map<String,Object> map=new HashMap<>();
@@ -103,5 +123,7 @@ public class TeacherController {
         map.put("msg","成功！");
         return map;
     }
+
+
 
 }
