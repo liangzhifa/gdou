@@ -48,8 +48,15 @@ public class ScoreSheetController {
     @Autowired
     private ClassInfoMapper classInfoMapper;
 
+    /**
+     * 上传Excel 录入成绩
+     * @param excel
+     * @param request
+     * @param response
+     * @param httpSession
+     * @return
+     */
     @RequestMapping(value = "/upload/studentScore")
-    @ResponseBody
     public Object uploadstudentScore(@RequestParam(value = "excel") MultipartFile excel,
                                      HttpServletRequest request,
                                      HttpServletResponse response,
@@ -141,6 +148,18 @@ public class ScoreSheetController {
     }
 
 
+    /**
+     * 添加学生成绩
+     * @param testTime
+     * @param studentNum
+     * @param yuwen
+     * @param shuxue
+     * @param yingyu
+     * @param wuli
+     * @param huaxue
+     * @param shengwu
+     * @return
+     */
     @RequestMapping("/student/insertscore")
     public Object studentInsertscore(Date testTime ,String studentNum,Integer yuwen
             ,Integer shuxue,Integer yingyu,Integer wuli,Integer huaxue,Integer shengwu){
@@ -162,6 +181,14 @@ public class ScoreSheetController {
         return map;
     }
 
+    /**
+     * 获取当前教师的所有学生
+     * @param page
+     * @param limit
+     * @param testTime
+     * @param httpSession
+     * @return
+     */
     @RequestMapping("/student/getScore")
     public Object studentGetScore(@RequestParam(value = "page",defaultValue = "1") Integer page,
                                   @RequestParam(value = "limit",defaultValue = "40")Integer limit,
@@ -220,6 +247,18 @@ public class ScoreSheetController {
         return LayUIDataGrid.ReturnDataGrid(total,res);
     }
 
+    /**
+     * 修改学生成绩
+     * @param testTime
+     * @param studentNum
+     * @param yuwen
+     * @param shuxue
+     * @param yingyu
+     * @param wuli
+     * @param huaxue
+     * @param shengwu
+     * @return
+     */
     @RequestMapping("/student/modify")
     public Object studentModify(Date testTime,String studentNum,
                                 Integer yuwen,Integer shuxue,Integer yingyu,
@@ -239,6 +278,17 @@ public class ScoreSheetController {
         map.put("code",0);
         map.put("msg","修改成功");
         return map;
+    }
+
+
+    /**
+     * 获取考试时间
+     * @return
+     */
+    @RequestMapping("/student/searchTestTime")
+    public Object searchTestTime(){
+        List<Date> allTestDate = scoreSheetMapper.findAllTestDate();
+        return allTestDate;
     }
 
 }

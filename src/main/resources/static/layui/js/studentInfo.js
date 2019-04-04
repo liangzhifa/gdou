@@ -1,3 +1,7 @@
+var testDate=new Array();
+var map={};
+var data=[] ;
+var data3=[] ;
 $(document).ready(function(){
     //alert('文档加载完毕');
     $.ajax({
@@ -5,105 +9,211 @@ $(document).ready(function(){
         success:function(result){
             //$("#weui-textarea").val(result)
             $.toast("欢迎 "+result, "text");
-            console.log(result)
+            console.log("/wx/getUserInfo "+result)
         },
         error:function(e){
             alert("错误！！");
 
         }
     });
+    $.ajax({
+        url:"/wx/getScoreByDate",
+        dataType:"json",
+        success:function(result){
+            //console.log("/wx/getScoreByDate "+result);
+            map=result.map;
+            data=result.data;
+            data3=result.data3;
+            //console.log("data  "+JSON.stringify(data));
+            //scoreX1(map,data);
+            scoreX3(data3);
+            scoreX2(data);
+        }
+    });
+
+    $.ajax({
+        url:"/wx/getTestDate",
+        success:function(result){
+            //console.log("/wx/getTestDate "+result)
+           for (var i=0;i<result.length;i++){
+               testDate.push(result[i])
+           }
+        }
+    });
 });
 
 $("#score").picker({
-    title: "请选择成绩展示类型:",
+    title: "请选择考试日期:",
     cols: [
         {
             textAlign: 'center',
-            values: ['饼图', '柱状图', 'iPhone 5', 'iPhone 5S', 'iPhone 6', 'iPhone 6 Plus', 'iPad 2', 'iPad Retina', 'iPad Air', 'iPad mini', 'iPad mini 2', 'iPad mini 3']
+            values: testDate
         }
     ],
     onChange: function(p, v, dv) {
-        console.log("p=>"+p+" v=>"+v+" dv=>"+dv);
+        //console.log("onChange p=>"+p+" v=>"+v+" dv=>"+dv);
     },
     onClose: function(p) {
-
-        console.log(p["value"][0]);
+        //console.log("onClose"+p["value"][0]);
+        $.ajax({
+            url:"/wx/getScoreByDate",
+            data: {testTime:p["value"][0]},
+            success:function(result){
+                map=result.map;
+                data=result.data;
+                data3=result.data3;
+                //scoreX1(map,data);
+                scoreX3(data3);
+                scoreX2(data);
+            }
+        });
     }
 
 });
 
-var map = {
-    '芳华': '80%',
-    '妖猫传': '20%',
-    '机器之血': '18%',
-    '心理罪': '15%',
-    '寻梦环游记': '5%',
-    '其他': '2%',
-    'h哈':'1%'
-};
-var data = [{
-    name: '芳华',
-    percent: 0.4,
-    a: '1'
-}, {
-    name: '妖猫传',
-    percent: 0.2,
-    a: '1'
-}, {
-    name: '机器之血',
-    percent: 0.18,
-    a: '1'
-}, {
-    name: '心理罪',
-    percent: 0.15,
-    a: '1'
-}, {
-    name: '寻梦环游记',
-    percent: 0.05,
-    a: '1'
-}, {
-    name: '其他',
-    percent: 0.02,
-    a: '1'
-}, {
-    name: 'h哈',
-    percent: 0.01,
-    a: '1'
-}];
-var chart = new F2.Chart({
-    id: 'mountNode',
-    pixelRatio: window.devicePixelRatio
-});
-chart.source(data, {
-    percent: {
-        formatter: function formatter(val) {
-            return val * 100 + '%';
+
+
+function scoreX1(map, data) {
+    var chart = new F2.Chart({
+        id: 'mountNode',
+        pixelRatio: window.devicePixelRatio
+    });
+    chart.clear(); // 清除
+    chart.source(data, {
+        percent: {
+            formatter: function formatter(val) {
+                return val * 100 + '%';
+            }
         }
-    }
-});
-chart.legend({
-    position: 'right',
-    itemFormatter: function itemFormatter(val) {
-        return val + '  ' + map[val];
-    }
-});
-chart.tooltip(false);
-chart.coord('polar', {
-    transposed: true,
-    radius: 0.85
-});
-chart.axis(false);
-chart.interval().position('a*percent').color('name', ['#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864', '#8543E0', '#13C2C2']).adjust('stack').style({
-    lineWidth: 1,
-    stroke: '#fff',
-    lineJoin: 'round',
-    lineCap: 'round'
-}).animate({
-    appear: {
-        duration: 1200,
-        easing: 'bounceOut'
-    }
-});
+    });
+    chart.legend({
+        position: 'right',
+        itemFormatter: function itemFormatter(val) {
+            return val + '  ' + map[val];
+        }
+    });
+    chart.tooltip(false);
+    chart.coord('polar', {
+        transposed: true,
+        radius: 0.75
+    });
+    chart.axis(false);
+    chart.interval().position('a*percent').color('name', ['#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864', '#8543E0']).adjust('stack').style({
+        lineWidth: 1,
+        stroke: '#fff',
+        lineJoin: 'round',
+        lineCap: 'round'
+    }).animate({
+        appear: {
+            duration: 1200,
+            easing: 'bounceOut'
+        }
+    });
+    chart.render();
+}
+function scoreX2(data){
+    var chart = new F2.Chart({
+        id: 'mountNode2',
+        pixelRatio: window.devicePixelRatio
+    });
+    chart.clear(); // 清除
+    chart.source(data, {
+        percent: {
+            formatter: function formatter(val) {
+                return val * 100;
+            }
+        }
+    });
+    chart.legend({
+        position: 'right',
+        marker: 'square'
+    });
+    chart.tooltip(false);
+    chart.coord('polar', {
+        transposed: true,
+        radius: 0.85,
+        innerRadius: 0.618
+    });
+    chart.axis(false);
+    chart.interval().position('a*percent').color('name', ['#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864', '#8543E0']).adjust('stack').style({
+        lineWidth: 1,
+        stroke: '#fff',
+        lineJoin: 'round',
+        lineCap: 'round'
+    });
 
-chart.render();
+    chart.guide().html({
+        position: ['50%', '50%'],
+        html: '<div style="text-align: center;width: 100px;height: 72px;vertical-align: middle;">' + '<p id="number" style="font-size: 28px;margin: 10px 10px 5px;font-weight: bold;"></p>' + '<p id="name" style="font-size: 12px;margin: 0;"></p>' + '</div>'
+    });
+    chart.render();
+    chart.interaction('pie-select', {
+        animate: {
+            duration: 300,
+            easing: 'backOut'
+        },
+        defaultSelected: {
+            name: data[0]["name"],
+            percent: data[0]["percent"],
+            a: '1'
+        },
+        onEnd: function onEnd(ev) {
+            var shape = ev.shape,
+                data = ev.data,
+                shapeInfo = ev.shapeInfo,
+                selected = ev.selected;
+
+            if (shape) {
+                if (selected) {
+                    $('#number').css('color', shapeInfo.color);
+                    $('#number').text(data.percent * 100 );
+                    $('#name').text(data.name);
+                } else {
+                    $('#number').text('');
+                    $('#name').text('');
+                }
+            }
+        }
+    });
+}
+function scoreX3(data) {
+
+    var chart = new F2.Chart({
+        id: 'mountNode',
+        pixelRatio: window.devicePixelRatio
+    });
+    chart.clear(); // 清除
+    chart.source(data);
+    chart.coord('polar', {
+        transposed: true,
+        radius: 0.61
+    });
+    chart.legend(false);
+    chart.axis(false);
+    chart.tooltip(false);
+
+    // 添加饼图文本
+    chart.pieLabel({
+        sidePadding: 40,
+        label1: function label1(data, color) {
+            return {
+                text: data.name,
+                fill: color
+            };
+        },
+        label2: function label2(data) {
+            return {
+                text: String(Math.floor(data.y * 100) / 100).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+                fill: '#808080',
+                fontWeight: 'bold'
+            };
+        }
+    });
+
+    chart.interval().position('const*y').color('name',['#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864', '#8543E0']).adjust('stack');
+    chart.render();
+
+}
+
+
 

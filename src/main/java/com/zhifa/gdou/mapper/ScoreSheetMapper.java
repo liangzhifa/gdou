@@ -31,7 +31,41 @@ public interface ScoreSheetMapper {
     * */
     List<ScoreTempEntity>getGroupByTestTime(@Param("testTime") Date testTime, @Param("stuNums") List<String> stuNums);
 
+    /**
+     * genju根据学号和日期查询成绩
+     * @param studentnum
+     * @param testTime
+     * @return
+     */
+
     List<ScoreSheet> findByNumAndTime(@Param("studentnum") String studentnum, @Param("testTime") Date testTime);
 
     int updateScoreByNumAndCorseAndTestTime(@Param("testTime") Date testTime, @Param("studentNum") String studentNum, @Param("course") String course, @Param("score") Integer score);
+
+    /**
+     * 查询该学生下面所有的考试日期
+     * @param studentnum
+     * @return
+     */
+    List<String>findTestDate(@Param("studentnum") String studentnum);
+
+    List<Date>findTestDateFormat(@Param("studentnum") String studentnum);
+    /**
+     * genju根据学号和日期查询成绩
+     * @param studentnum
+     * @param testTime
+     * @return
+     */
+
+    List<ScoreSheet>getScoreByDate(@Param("studentnum") String studentnum, @Param("testTime") Date  testTime);
+
+    /**
+     * 获取该学生最近一次考试
+     * @param studentnum
+     * @return
+     */
+    Date getNearOneTime(@Param("studentnum") String studentnum);
+
+    List<Date>findAllTestDate();
+
 }

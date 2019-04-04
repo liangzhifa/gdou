@@ -19,10 +19,15 @@
 </blockquote>
 
 <div class="demoTable">
-    考试日期：
-    <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-        <input type="text" class="layui-input" id="dateSearch">
-    </div>
+    <form class="layui-form"  action="">
+        考试日期：
+        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+            <div class="layui-input-inline">
+                <select name="testTime"  lay-filter="selectTestTime" id="selectTestTime"></select>
+            </div>
+        </div>
+    </form>
+
 </div>
 <table class="layui-hide" id="test" lay-filter="test"></table>
 <div id="add-main" style="display: none;">
@@ -181,6 +186,7 @@
 </script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
+    layui.form.render("select");
     var insertVar;
     var modifyVar;
     layui.use('laydate', function(){
@@ -193,17 +199,7 @@
             //,type: 'year'
             ,done: function(value, date, endDate){
                 console.log(value); //得到日期生成的值，如：2017-08-18
-               /* // todo 重新刷表单
-                var tableSearch = layui.table;
-                //执行重载
-                tableSearch.reload('test', {
-                    page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                    ,where: {
-                        insured_year: value
-                    }
-                });*/
+
                //动态加载班级学生
                 $.ajax({
                     url:'/classInfo/getStudentInfo',
@@ -246,6 +242,7 @@
                 ,'密码必须数字，且不能出现空格'
             ]
         });
+
     });
     var modifyData='';
     var insertVar;
@@ -473,6 +470,17 @@
             });
             return false;//如果不加这句，则ajax的回调函数不执行
         });
+        form.on('select(selectTestTime)', function(data){
+            console.log(data.value); //得到被选中的值
+            //刷新表单
+            layui.table.reload('test', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                } ,where: {
+                    testTime: data.value
+                }
+            });
+        });
     });
     layui.use('upload', function(){
         var $ = layui.jquery
@@ -527,6 +535,20 @@
             $("#search").click();
         }
     }
+    $.ajax({
+        url: '/student/searchTestTime',
+        dataType: 'json',
+        type: 'get',
+        success: function (data) {
+            $('#selectTestTime').empty();
+            $.each(data, function (index, item) {
+                $('#selectTestTime').append(new Option(item, item));// 下拉菜单里添加元素
+            });
+            layui.form.render("select");
+        }
+    });
+
+     //重新渲染 固定写法
 
 </script>
 </html>

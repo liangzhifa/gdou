@@ -11,29 +11,20 @@ import com.mxixm.fastboot.weixin.module.user.WxUser;
 import com.mxixm.fastboot.weixin.module.web.WxRequest;
 import com.mxixm.fastboot.weixin.module.web.WxRequestBody;
 import com.mxixm.fastboot.weixin.module.web.session.WxSession;
-import com.mxixm.fastboot.weixin.util.WxWebUtils;
-import com.mxixm.fastboot.weixin.web.WxWebUser;
 import com.zhifa.gdou.mapper.StudentInfoMapper;
 import com.zhifa.gdou.mapper.WxUserAttentionMapper;
-import com.zhifa.gdou.model.StudentInfo;
 import com.zhifa.gdou.model.WxUserAttention;
 import com.zhifa.gdou.utils.WxBeanUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
 
 
 @com.mxixm.fastboot.weixin.annotation.WxController
-public class WxController {
+public class WxMenuController {
 
-    private static Logger log = LoggerFactory.getLogger(WxController.class);
+    private static Logger log = LoggerFactory.getLogger(WxMenuController.class);
 
     @Autowired
     private WxUserAttentionMapper wxUserAttentionMapper;
@@ -86,23 +77,6 @@ public class WxController {
         return wxUser.getNickName()+"  留言回复：";
     }
 
-
-
-    @RequestMapping("/wx/getUserInfo")
-    @ResponseBody
-    public String getUserInfo(HttpSession session){
-
-        /**
-         * 已经绑定的前提下，设置session值
-         */
-        WxWebUser wxWebUser = WxWebUtils.getWxWebUserFromSession();
-        String openId = wxWebUser.getOpenId();
-        StudentInfo studentInfo = studentInfoMapper.selectByOpenId(openId);
-        session.setAttribute("student",studentInfo);
-
-        log.info("OPEN_ID=>{}\n studentInfo=>{}",wxWebUser.getOpenId(),studentInfo.toString());
-        return studentInfo.getStudentname();
-    }
 
     /**
      * 定义微信菜单，并接受事件

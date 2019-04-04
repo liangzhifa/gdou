@@ -13,7 +13,7 @@
             height: 100%;
         }
     </style>
-    <title>学生信息</title>
+    <title>成绩信息</title>
 
 
 </head>
@@ -21,10 +21,13 @@
 <div class="weui-tab">
     <div class="weui-tab__bd">
         <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
-            <div class="chart-wrapper" style="height: 77%">
+            <div class="chart-wrapper" style="height: 42%;" >
                 <canvas id="mountNode"></canvas>
             </div>
-            <div class="weui-cells weui-cells_form">
+            <div class="chart-wrapper" style="height: 35%;" >
+                <canvas id="mountNode2"></canvas>
+            </div>
+            <div class="weui-cells weui-cells_form" style="height: auto;" >
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">考试日期</label></div>
                     <div class="weui-cell__bd">
@@ -36,6 +39,12 @@
 
 
         <div id="tab2" class="weui-tab__bd-item">
+            <div class="chart-wrapper" style="height: 45%;width: auto"  >
+                <canvas id="getScoreAll"></canvas>
+            </div>
+            <div class="chart-wrapper" style="height: 55%;width: auto"  >
+                <canvas id="getScoreAll2"></canvas>
+            </div>
 
         </div>
 
@@ -85,8 +94,8 @@
 <script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/swiper.min.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/city-picker.min.js"></script>
 
-<script src="https://gw.alipayobjects.com/os/antv/assets/f2/3.3.5/f2.min.js"></script>
-
+<script src="https://gw.alipayobjects.com/os/antv/assets/f2/3.3.8/f2-all.min.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/lib/lodash-4.17.4.min.js"></script>
 <!-- 在 PC 上模拟 touch 事件 -->
 <script src="https://gw.alipayobjects.com/os/rmsportal/NjNldKHIVQRozfbAOJUW.js"></script>
 <script src="/layui/js/studentInfo.js"></script>

@@ -1,6 +1,6 @@
 package com.zhifa.gdou.config;
 
-import com.zhifa.gdou.model.Manager;
+import com.zhifa.gdou.model.StudentInfo;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,10 +16,10 @@ public class LoginConfig implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String requestURI = httpServletRequest.getRequestURI();
         //System.out.println(httpServletRequest.getRequestURI()+"============》preHandle");
-       /* HttpSession httpSession = httpServletRequest.getSession();
-        Manager manager= (Manager) httpSession.getAttribute("manager");
-        if(ObjectUtils.isEmpty(manager)){
-            httpServletResponse.sendRedirect("/manager/login");
+      /* HttpSession httpSession = httpServletRequest.getSession();
+        StudentInfo student = (StudentInfo) httpSession.getAttribute("student");
+        if(ObjectUtils.isEmpty(student)){
+            httpServletResponse.sendRedirect("/wx/main");
             return false;
 
         }*/

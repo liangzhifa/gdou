@@ -141,5 +141,20 @@
     select * from score_sheet
     where studentNum=#{studentnum} and test_time=#{testTime}
   </select>
+  <select id="findTestDate" resultType="java.lang.String">
+    SELECT  test_time  from score_sheet WHERE studentNum=#{studentnum} GROUP BY test_time ORDER BY test_time desc
+  </select>
+  <select id="getScoreByDate" resultType="com.zhifa.gdou.model.ScoreSheet">
+    SELECT  *  from score_sheet WHERE studentNum=#{studentnum} and test_time=#{testTime}
+  </select>
+  <select id="getNearOneTime" resultType="java.util.Date">
+   SELECT  test_time  from score_sheet WHERE studentNum=#{studentnum} GROUP BY test_time ORDER BY test_time desc LIMIT 1
+  </select>
+  <select id="findTestDateFormat" resultType="java.util.Date">
+     SELECT  test_time  from score_sheet WHERE studentNum=#{studentnum} GROUP BY test_time ORDER BY test_time desc  LIMIT 6
+  </select>
+  <select id="findAllTestDate" resultType="java.util.Date">
+    SELECT distinct test_time  from score_sheet GROUP BY test_time ORDER BY test_time desc
+  </select>
 
 </mapper>

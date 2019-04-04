@@ -10,23 +10,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/wx")
 public class WxPageController {
 
     @Autowired
-    StudentInfoMapper studentInfoMapper;
+    private StudentInfoMapper studentInfoMapper;
 
     @RequestMapping("/main")
-    public String toMain_login(){
+    public String toMain_login(HttpSession httpSession){
       //  WxSession wxSession = wxRequest.getWxSession();
         WxWebUser wxWebUser = WxWebUtils.getWxWebUserFromSession();
         String openId = wxWebUser.getOpenId();
-        //todo cha查数据库判断该用户是否已经绑定了学号
+        //查数据库判断该用户是否已经绑定了学号
         StudentInfo studentInfo = studentInfoMapper.selectByOpenId(openId);
         if (studentInfo==null){
             return "wx/userLogin";
         }
+        httpSession.setAttribute("student",studentInfo);
         return "wx/main";
     }
 }
