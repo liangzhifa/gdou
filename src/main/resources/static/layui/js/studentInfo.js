@@ -65,6 +65,7 @@ $("#score").picker({
                 //scoreX1(map,data);
                 scoreX3(data3);
                 scoreX2(data);
+                $.toptip('成功', 'success');
             }
         });
     }
@@ -110,6 +111,7 @@ function scoreX1(map, data) {
         }
     });
     chart.render();
+
 }
 function scoreX2(data){
     var chart = new F2.Chart({
@@ -175,6 +177,7 @@ function scoreX2(data){
             }
         }
     });
+
 }
 function scoreX3(data) {
 
@@ -212,6 +215,7 @@ function scoreX3(data) {
 
     chart.interval().position('const*y').color('name',['#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864', '#8543E0']).adjust('stack');
     chart.render();
+
 
 }
 

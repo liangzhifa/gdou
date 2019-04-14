@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <!-- head 中 -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.1/css/jquery-weui.min.css">
@@ -11,6 +11,9 @@
     <style type="text/css">
         html, body {
             height: 100%;
+        }
+        .chartwrapper {
+            background-color: #0290A8;
         }
     </style>
     <title>成绩信息</title>
@@ -49,11 +52,178 @@
         </div>
 
         <div id="tab3" class="weui-tab__bd-item">
-            <h1>页面三</h1>
+            <div class="chartwrapper" style="height: 55%;">
+                <canvas id="tab3Id1"></canvas>
+            </div>
+            <div class="chart-wrapper" style="height: 20%;" >
+                <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+                    <div class="weui-media-box__hd">
+                        <img class="weui-media-box__thumb" src="/amazeui/css/gdou.jpg">
+                    </div>
+                    <div class="weui-media-box__bd">
+                        <h4 class="weui-media-box__title">成绩统计</h4>
+                        <p class="weui-media-box__desc">
+                            历年的单科成绩<br>
+                            (初始默认科目选项中的第一项)
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="weui-cells weui-cells_form" style="height: 20%;">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">科目</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" id="tap3Course" type="text" value="">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="tab4" class="weui-tab__bd-item">
-            <h1>页面四</h1>
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label">付款金额</label>
+                    <em class="weui-form-preview__value">¥2400.00</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">商品</label>
+                        <span class="weui-form-preview__value">电动打蛋机</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">名字名字名字</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">辅助操作</a>
+                    <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">操作</button>
+                </div>
+            </div>
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label">付款金额</label>
+                    <em class="weui-form-preview__value">¥2400.00</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">商品</label>
+                        <span class="weui-form-preview__value">电动打蛋机</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">名字名字名字</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">辅助操作</a>
+                    <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">操作</button>
+                </div>
+            </div>
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label">付款金额</label>
+                    <em class="weui-form-preview__value">¥2400.00</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">商品</label>
+                        <span class="weui-form-preview__value">电动打蛋机</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">名字名字名字</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">辅助操作</a>
+                    <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">操作</button>
+                </div>
+            </div>
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label">付款金额</label>
+                    <em class="weui-form-preview__value">¥2400.00</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">商品</label>
+                        <span class="weui-form-preview__value">电动打蛋机</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">名字名字名字</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">辅助操作</a>
+                    <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">操作</button>
+                </div>
+            </div>
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label">付款金额</label>
+                    <em class="weui-form-preview__value">¥2400.00</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">商品</label>
+                        <span class="weui-form-preview__value">电动打蛋机</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">名字名字名字</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">辅助操作</a>
+                    <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">操作</button>
+                </div>
+            </div>
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label">付款金额</label>
+                    <em class="weui-form-preview__value">¥2400.00</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">商品</label>
+                        <span class="weui-form-preview__value">电动打蛋机</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">名字名字名字</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">标题标题</label>
+                        <span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">辅助操作</a>
+                    <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">操作</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="weui-tabbar">
@@ -74,7 +244,7 @@
             <div class="weui-tabbar__icon">
                 <img src="./images/icon_nav_msg.png" alt="">
             </div>
-            <p class="weui-tabbar__label">通讯</p>
+            <p class="weui-tabbar__label">统计</p>
         </a>
 
         <a href="#tab4" class="weui-tabbar__item">
@@ -94,12 +264,14 @@
 <script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/swiper.min.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/city-picker.min.js"></script>
 
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
 <script src="https://gw.alipayobjects.com/os/antv/assets/f2/3.3.8/f2-all.min.js"></script>
 <script src="https://gw.alipayobjects.com/os/antv/assets/lib/lodash-4.17.4.min.js"></script>
 <!-- 在 PC 上模拟 touch 事件 -->
 <script src="https://gw.alipayobjects.com/os/rmsportal/NjNldKHIVQRozfbAOJUW.js"></script>
 <script src="/layui/js/studentInfo.js"></script>
 <script src="/layui/js/secondPage.js"></script>
+<script src="/layui/js/threePage.js"></script>
 
 </html>
 

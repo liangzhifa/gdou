@@ -42,6 +42,7 @@ $(document).ready(function(){
         });
         chart.line().position('date*value').color('type');
         chart.render();
+
         /**
          * data下方
          * @type {F2.Chart}
@@ -110,6 +111,7 @@ $(document).ready(function(){
             lineWidth: 1
         });
         chart.render();
+
 
 
     });

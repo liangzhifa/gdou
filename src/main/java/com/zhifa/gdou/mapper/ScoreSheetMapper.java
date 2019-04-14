@@ -68,4 +68,11 @@ public interface ScoreSheetMapper {
 
     List<Date>findAllTestDate();
 
+    /*获取所有课程*/
+    List<String> getCourseAll(@Param("studentnum") String studentnum);
+    String getCourseAllLimit1(@Param("studentnum") String studentnum);
+
+
+    List<ScoreSheet>getScoreByCourse(@Param("studentnum") String studentnum,@Param("course") String course);
+
 }

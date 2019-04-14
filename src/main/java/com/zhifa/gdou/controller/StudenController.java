@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,6 +70,20 @@ public class StudenController {
         List<String> dateList = scoreSheetMapper.findTestDate(student.getStudentnum());
         return dateList;
     }
+
+    /**
+     * huoqu考试所有考试科目
+     * @param session
+     * @return
+     */
+    @RequestMapping("/wx/getCourseAll")
+    public Object getCourseAll(HttpSession session){
+        StudentInfo student = (StudentInfo) session.getAttribute("student");
+        List<String> courseList = scoreSheetMapper.getCourseAll(student.getStudentnum());
+        return courseList;
+    }
+
+
 
     /**
      * 通过日期查询各门成绩
@@ -141,6 +156,44 @@ public class StudenController {
         jsonres.put("data1",jsonArray);
         jsonres.put("data2",data2);
 
+        return jsonres;
+    }
+
+    /**
+     * 查询该学生历年的单科成绩
+     * @param session
+     * @return
+     */
+    @RequestMapping("/wx/getScoreByCourse")
+    public Object getScoreByCourse(HttpSession session,String course ){
+        StudentInfo student = (StudentInfo) session.getAttribute("student");
+        if (StringUtils.isEmpty(course)){
+            course = scoreSheetMapper.getCourseAllLimit1(student.getStudentnum());
+        }
+        List<ScoreSheet> scoreSheetList = scoreSheetMapper.getScoreByCourse(student.getStudentnum(), course);
+        JSONArray data = new JSONArray();
+        ArrayList<String> ticks = new ArrayList<>();
+
+
+        for (int i = 0; i < scoreSheetList.size(); i++) {
+            JSONObject  temp = new JSONObject();
+            ScoreSheet scoreSheet = scoreSheetList.get(i);
+            temp.put("date", new SimpleDateFormat("dd/MM/yyyy").format(scoreSheet.getTestTime()));
+            temp.put("score", scoreSheet.getScore());
+            data.add(temp);
+        }
+        if (scoreSheetList.size()<=3){
+            for (int i = 0; i <scoreSheetList.size() ; i++) {
+                ticks.add(new SimpleDateFormat("dd/MM/yyyy").format(scoreSheetList.get(i).getTestTime()));
+            }
+        }else {
+            ticks.add(new SimpleDateFormat("dd/MM/yyyy").format(scoreSheetList.get(0).getTestTime()));
+            ticks.add(new SimpleDateFormat("dd/MM/yyyy").format(scoreSheetList.get(scoreSheetList.size()/2).getTestTime()));
+            ticks.add(new SimpleDateFormat("dd/MM/yyyy").format(scoreSheetList.get(scoreSheetList.size()-1).getTestTime()));
+        }
+        JSONObject jsonres = new JSONObject();
+        jsonres.put("data",data);
+        jsonres.put("ticks",ticks);
         return jsonres;
     }
 

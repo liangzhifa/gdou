@@ -156,5 +156,14 @@
   <select id="findAllTestDate" resultType="java.util.Date">
     SELECT distinct test_time  from score_sheet GROUP BY test_time ORDER BY test_time desc
   </select>
+  <select id="getCourseAll" resultType="java.lang.String">
+    SELECT DISTINCT course  from score_sheet WHERE studentNum=#{studentnum} GROUP BY course
+  </select>
+  <select id="getScoreByCourse" resultType="com.zhifa.gdou.model.ScoreSheet">
+     SELECT  * from score_sheet  WHERE studentNum=#{studentnum} and course=#{course} ORDER BY test_time
+  </select>
+  <select id="getCourseAllLimit1" resultType="java.lang.String">
+     SELECT DISTINCT course  from score_sheet WHERE studentNum=#{studentnum} GROUP BY course limit 1
+  </select>
 
 </mapper>
