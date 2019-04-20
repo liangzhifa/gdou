@@ -123,4 +123,7 @@
      select * from teacher
      where teacher_num=#{teacherNum} and teacher_password=#{teacherPassword}
   </select>
+  <select id="selectByOpenId" resultType="com.zhifa.gdou.model.Teacher">
+    SELECT * FROM teacher  WHERE openId=#{openId}
+  </select>
 </mapper>

@@ -29,6 +29,10 @@
     select distinct studentNum from class_info
     where head_master_num=#{headMasterNum}
   </select>
+  <select id="findTeacherNumByStuNum" resultType="java.lang.String">
+    select distinct head_master_num from class_info
+    where studentNum=#{studentNum} limit 1
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from class_info

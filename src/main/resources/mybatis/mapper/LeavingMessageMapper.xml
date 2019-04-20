@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhifa.gdou.mapper.LeavingMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.LeavingMessage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="studentNum" property="studentnum" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+    <result column="reply_status" property="replyStatus" jdbcType="TINYINT" />
+    <result column="teacher_num" property="teacherNum" jdbcType="VARCHAR" />
+    <result column="reply_time" property="replyTime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, studentNum, content, creat_time, reply_status, teacher_num, reply_time, type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leaving_message
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getTeacherLeavingContent" resultType="com.zhifa.gdou.model.LeavingMessage">
+    select * from leaving_message where teacher_num=#{teacher_num} order by creat_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leaving_message
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhifa.gdou.model.LeavingMessage" >
+    insert into leaving_message (id, studentNum, content, 
+      creat_time, reply_status, teacher_num, 
+      reply_time, type)
+    values (#{id,jdbcType=INTEGER}, #{studentnum,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{creatTime,jdbcType=TIMESTAMP}, #{replyStatus,jdbcType=TINYINT}, #{teacherNum,jdbcType=VARCHAR}, 
+      #{replyTime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhifa.gdou.model.LeavingMessage" >
+    insert into leaving_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="studentnum != null" >
+        studentNum,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="creatTime != null" >
+        creat_time,
+      </if>
+      <if test="replyStatus != null" >
+        reply_status,
+      </if>
+      <if test="teacherNum != null" >
+        teacher_num,
+      </if>
+      <if test="replyTime != null" >
+        reply_time,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="studentnum != null" >
+        #{studentnum,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="creatTime != null" >
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyStatus != null" >
+        #{replyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="teacherNum != null" >
+        #{teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTime != null" >
+        #{replyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhifa.gdou.model.LeavingMessage" >
+    update leaving_message
+    <set >
+      <if test="studentnum != null" >
+        studentNum = #{studentnum,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="creatTime != null" >
+        creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyStatus != null" >
+        reply_status = #{replyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="teacherNum != null" >
+        teacher_num = #{teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTime != null" >
+        reply_time = #{replyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhifa.gdou.model.LeavingMessage" >
+    update leaving_message
+    set studentNum = #{studentnum,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      reply_status = #{replyStatus,jdbcType=TINYINT},
+      teacher_num = #{teacherNum,jdbcType=VARCHAR},
+      reply_time = #{replyTime,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

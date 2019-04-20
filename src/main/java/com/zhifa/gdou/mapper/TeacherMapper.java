@@ -27,4 +27,7 @@ public interface TeacherMapper {
     int UpdateTeacherState(@Param("id") Integer id, @Param("state") Byte state);
 
     Teacher selectByNameAndPass(@Param("teacherNum") String teacherNum, @Param("teacherPassword") String teacherPassword);
+
+    //教师登录
+    Teacher selectByOpenId(@Param("openId") String openId);
 }

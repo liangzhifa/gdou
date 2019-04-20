@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mxixm.fastboot.weixin.util.WxWebUtils;
 import com.mxixm.fastboot.weixin.web.WxWebUser;
+import com.zhifa.gdou.mapper.ClassInfoMapper;
+import com.zhifa.gdou.mapper.LeavingMessageMapper;
 import com.zhifa.gdou.mapper.ScoreSheetMapper;
 import com.zhifa.gdou.mapper.StudentInfoMapper;
+import com.zhifa.gdou.model.LeavingMessage;
 import com.zhifa.gdou.model.ScoreSheet;
 import com.zhifa.gdou.model.StudentInfo;
 import com.zhifa.gdou.resultEntity.ScoreVo;
@@ -29,6 +32,12 @@ public class StudenController {
 
     @Autowired
     private ScoreSheetMapper scoreSheetMapper;
+
+    @Autowired
+    private  ClassInfoMapper classInfoMapper;
+
+    @Autowired
+    private LeavingMessageMapper leavingMessageMapper;
 
     private static Logger log = LoggerFactory.getLogger(StudenController.class);
 
@@ -195,6 +204,18 @@ public class StudenController {
         jsonres.put("data",data);
         jsonres.put("ticks",ticks);
         return jsonres;
+    }
+    /**
+     * @Author: zhifa
+     * @Date: 2019/4/21
+     * @Description: 根据学生查询班主任所有留言
+     */
+    @RequestMapping("/wx/getLeavingMsg")
+    public Object getLeavingMsg(HttpSession session){
+        StudentInfo student = (StudentInfo) session.getAttribute("student");
+        String teacherNum = classInfoMapper.findTeacherNumByStuNum(student.getStudentnum());
+        List<LeavingMessage> messages = leavingMessageMapper.getTeacherLeavingContent(teacherNum);
+        return messages;
     }
 
 

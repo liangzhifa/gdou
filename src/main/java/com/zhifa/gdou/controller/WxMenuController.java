@@ -49,34 +49,34 @@ public class WxMenuController {
     /**
      * 定义微信菜单，并接受事件
      */
-    @WxButton(type = WxButton.Type.CLICK,
+ /*   @WxButton(type = WxButton.Type.CLICK,
             group = WxButton.Group.LEFT,
             order = WxButton.Order.FIRST,
             name = "消息tips")
     public String leftFirst(WxRequest wxRequest, WxUser wxUser) {
         //log.info("wxRequest=>{}",wxRequest);
         log.info("wxUser=>{}",wxUser);
-      /*  WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
-        int insert = wxUserAttentionMapper.insert(wxUserAttention);*/
+      *//*  WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
+        int insert = wxUserAttentionMapper.insert(wxUserAttention);*//*
         return wxUser.getNickName()+"  你好啊！/:rose \n"
                                 +"家长留言格式(#内容)\n"
                                 +"教师群发家庭作业($内容)";
-    }
+    }*/
     /**
      * 定义微信菜单，并接受事件
      */
-    @WxButton(type = WxButton.Type.CLICK,
+    /*@WxButton(type = WxButton.Type.CLICK,
             group = WxButton.Group.LEFT,
             order = WxButton.Order.SECOND,
             name = "留言回复")
     public String leftSECOND(WxRequest wxRequest, WxUser wxUser) {
         //log.info("wxRequest=>{}",wxRequest);
         log.info("wxUser=>{}",wxUser);
-      /*  WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
-        int insert = wxUserAttentionMapper.insert(wxUserAttention);*/
+      *//*  WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
+        int insert = wxUserAttentionMapper.insert(wxUserAttention);*//*
         return wxUser.getNickName()+"  留言回复：";
     }
-
+*/
 
     /**
      * 定义微信菜单，并接受事件

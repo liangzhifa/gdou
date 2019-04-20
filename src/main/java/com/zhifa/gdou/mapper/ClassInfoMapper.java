@@ -30,4 +30,6 @@ public interface ClassInfoMapper {
     /*根据班主任id 查询班主任下面的学生
     * */
     List<String>findStuNum(@Param("headMasterNum") String headMasterNum);
+
+    String findTeacherNumByStuNum(@Param("studentNum") String studentNum);
 }

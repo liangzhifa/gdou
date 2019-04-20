@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+">
+
     <!-- head 中 -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.1/css/jquery-weui.min.css">
-    <link rel="stylesheet" href="https://gw.alipayobjects.com/os/rmsportal/YmDAMEQVbLJpVbKiRQVX.css" />
+    <link rel="stylesheet" href="/layui/lib/layui/css/layui.css" media="all">
+<!--    <link rel="stylesheet" href="https://gw.alipayobjects.com/os/rmsportal/YmDAMEQVbLJpVbKiRQVX.css" />-->
     <style type="text/css">
-        html,body{height: 100%;}
+        html,body{
+            height: 100%;
+
+        }
     </style>
-    <title>学生信息</title>
+    <title>消息</title>
 
 
 </head>
@@ -19,69 +27,152 @@
 <div class="weui-tab">
     <div class="weui-tab__bd">
         <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
-            <div class="chart-wrapper">
-                <canvas id="mountNode"></canvas>
-            </div>
-            <div class="weui-cells weui-cells_form">
 
-                <div class="weui-cell">
-                    <div class="weui-cell__hd"><label for="name" class="weui-label">称呼</label></div>
+            <div class="weui-cells__title">留言类型</div>
+            <div class="weui-cells">
+                <div class="weui-cell weui-cell_select">
                     <div class="weui-cell__bd">
-                        <input class="weui-input" id="name" type="text" value="">
+                        <select class="weui-select" name="type" id="type">
+                            <option selected="" value="通知">通知</option>
+                            <option value="家庭作业">家庭作业</option>
+                            <option value="复习计划">复习计划</option>
+
+                        </select>
                     </div>
                 </div>
-
             </div>
+            <div class="weui-cells__title">内容</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <!--<textarea  id="content" placeholder="请输入内容" rows="5"></textarea>-->
+                        <!--<input class="weui-input" id="content" type="text" placeholder="请输入内容">-->
+                        <textarea class="layui-textarea" id="content" placeholder="请输入内容" rows="7"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" onclick="sub()" href="javascript:" id="submit">提交</a>
+            </div>
+
         </div>
-
-
 
         <div id="tab2" class="weui-tab__bd-item">
-            <div class='demos-content-padded'>
-                <a href="javascript:;" id='show-alert' class="weui-btn weui-btn_primary">显示 Alert</a>
-                <a href="javascript:;" id='show-confirm' class="weui-btn weui-btn_primary">显示 Confirm</a>
-                <a href="javascript:;" id='show-prompt' class="weui-btn weui-btn_primary">显示 Prompt</a>
-                <a href="javascript:;" id='show-login' class="weui-btn weui-btn_primary">显示登录弹窗</a>
-                <a href="javascript:;" id='show-custom' class="weui-btn weui-btn_primary">显示自定义对话框</a>
-            </div>
-        </div>
-
-        <div id="tab3" class="weui-tab__bd-item">
-            <h1>页面三</h1>
-        </div>
-
-        <div id="tab4" class="weui-tab__bd-item">
-            <h1>页面四</h1>
         </div>
     </div>
-    <div class="weui-tabbar"> <a href="#tab1" class="weui-tabbar__item weui-bar__item--on">
-        <div class="weui-tabbar__icon"> <img src="./images/icon_nav_button.png" alt=""> </div>
-        <p class="weui-tabbar__label">微信</p>
-    </a> <a href="#tab2" class="weui-tabbar__item">
-        <div class="weui-tabbar__icon"> <img src="./images/icon_nav_msg.png" alt=""> </div>
-        <p class="weui-tabbar__label">通讯录</p>
-    </a> <a href="#tab3" class="weui-tabbar__item">
-        <div class="weui-tabbar__icon"> <img src="./images/icon_nav_article.png" alt=""> </div>
-        <p class="weui-tabbar__label">发现</p>
-    </a> <a href="#tab4" class="weui-tabbar__item">
-        <div class="weui-tabbar__icon"> <img src="./images/icon_nav_cell.png" alt=""> </div>
-        <p class="weui-tabbar__label">我</p>
-    </a> </div>
+    <div class="weui-tabbar">
+        <a href="#tab1" class="weui-tabbar__item weui-bar__item--on">
+            <div class="weui-tabbar__icon"> <img src="./images/icon_nav_button.png" alt=""></div>
+            <p class="weui-tabbar__label">留言</p>
+        </a>
+        <a href="#tab2" class="weui-tabbar__item" id="record">
+            <div class="weui-tabbar__icon"> <img src="./images/icon_nav_msg.png" alt=""> </div>
+            <p class="weui-tabbar__label">记录</p>
+        </a>
+    </div>
 </div>
 
 </body>
 <!-- body 最后 -->
 <script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery-weui/1.2.1/js/jquery-weui.min.js"></script>
-<!-- 如果使用了某些拓展插件还需要额外的JS -->
-<script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/swiper.min.js"></script>
-<script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/city-picker.min.js"></script>
 
-<script src="https://gw.alipayobjects.com/os/antv/assets/f2/3.3.5/f2.min.js"></script>
+<script>
 
-<!-- 在 PC 上模拟 touch 事件 -->
-<script src="https://gw.alipayobjects.com/os/rmsportal/NjNldKHIVQRozfbAOJUW.js"></script>
-<script src="/layui/js/studentInfo.js"></script>
-<script src="/layui/js/secondPage.js"></script>
+    $(document).ready(function(){
+        $.ajax({
+            url:"/wx/getTeacherLeavingContent",
+            success:function(result){
+                if (result.code==1){
+                    $.toptip('失败', 'error');
+                }else {
+                    console.log(result);
+                    var tab2 = $("#tab2");
+                    if (result!=null){
+                        for (var res in result) {
+                            tab2.innerHTML = "";
+                            res=result[res]
+                            var temp='<div class="weui-form-preview">'+
+                                '<div class="weui-form-preview__bd">'+
+                                '<label class="weui-form-preview__label">留言类型</label>'+
+                                '<span class="weui-form-preview__value">'+res.type+'</span>'+
+                                '</div>'+
+                                '<div class="weui-form-preview__bd">'+
+                                '<div class="weui-form-preview__item">'+
+                                '<label class="weui-form-preview__label">内容</label>'+
+                                ' <span class="weui-form-preview__value">'+res.content+'</span>'+
+                                '</div>'+
+                                '</div>'+
+                                '<div class="weui-form-preview__bd">'+
+                                '<div class="weui-form-preview__item">'+
+                                '<label class="weui-form-preview__label">留言时间</label>'+
+                                ' <span class="weui-form-preview__value">'+res.creatTime+'</span>'+
+                                '</div>'+
+                                '</div>'+
+                                '<div class="weui-form-preview__ft">'+
+                                ' <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary " onclick="deleteMsg('+res.id+')">删除消息</button>'+
+                                '</div>'+
+                                '</div>';
+                            $("#tab2").append(temp)
+                            $("#tab2").append(" </br>");
+                        }
+                    }
+                }
+            }
+        });
+    });
+    function sub() {
+        var type = $("#type").val();
+        var content = $("#content").val();
+        if (type==""||content==""||content==null){
+            $.toast("内容不能为空", "forbidden");
+            return;
+        }
+        $.ajax({
+            url:"/wx/postLeavingContent",
+            data: {type:type,content:content},
+            success:function(result){
+                if (result.code==1){
+                    $.toptip('失败', 'error');
+                }else {
+                    console.log(result);
+                    $.toptip('成功', 'success');
+                    setTimeout(' window.location.replace("/wx/wx_teacher")',800)
+
+                }
+            }
+        });
+
+    }
+
+    function deleteMsg(id) {
+        $.confirm("确定要删除该信息吗?", function() {
+            $.ajax({
+                url:"/wx/deleteMsg",
+                data: {id:id},
+                success:function(result){
+                    if (result.code==1){
+                        $.toptip('失败', 'error');
+                    }else {
+                        console.log(result);
+                        $.toptip('成功', 'success');
+
+                        setTimeout(' window.location.replace("/wx/wx_teacher")',800)
+
+                    }
+                }
+            });
+            //点击确认后的回调函数
+        }, function() {
+            //点击取消后的回调函数
+        });
+
+
+
+    }
+
+
+
+</script>
 
 </html>
