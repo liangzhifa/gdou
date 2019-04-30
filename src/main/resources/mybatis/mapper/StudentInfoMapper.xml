@@ -102,4 +102,9 @@
       openId = #{openid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updateOpenIdByOpenId">
+    update student_info
+    set openId = ''
+    where openId = #{openId,jdbcType=VARCHAR}
+  </update>
 </mapper>

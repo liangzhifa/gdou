@@ -1,92 +1,92 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zhifa.gdou.mapper.ScoreSheetMapper" >
-  <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.ScoreSheet" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="studentNum" property="studentnum" jdbcType="VARCHAR" />
-    <result column="course" property="course" jdbcType="VARCHAR" />
-    <result column="score" property="score" jdbcType="INTEGER" />
-    <result column="test_time" property="testTime" jdbcType="DATE" />
-  </resultMap>
-  <resultMap id="tempEntity" type="com.zhifa.gdou.utils.ScoreTempEntity">
-    <result column="studentNum" property="studentnum" jdbcType="VARCHAR"/>
-    <result column="test_time" property="testTime" jdbcType="DATE"/>
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.zhifa.gdou.mapper.ScoreSheetMapper">
+    <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.ScoreSheet">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="studentNum" property="studentnum" jdbcType="VARCHAR"/>
+        <result column="course" property="course" jdbcType="VARCHAR"/>
+        <result column="score" property="score" jdbcType="INTEGER"/>
+        <result column="test_time" property="testTime" jdbcType="DATE"/>
+    </resultMap>
+    <resultMap id="tempEntity" type="com.zhifa.gdou.utils.ScoreTempEntity">
+        <result column="studentNum" property="studentnum" jdbcType="VARCHAR"/>
+        <result column="test_time" property="testTime" jdbcType="DATE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, studentNum, course, score, test_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from score_sheet
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from score_sheet
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from score_sheet
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zhifa.gdou.model.ScoreSheet" >
+    <insert id="insert" parameterType="com.zhifa.gdou.model.ScoreSheet">
     insert into score_sheet (id, studentNum, course, 
       score, test_time)
     values (#{id,jdbcType=INTEGER}, #{studentnum,jdbcType=VARCHAR}, #{course,jdbcType=VARCHAR}, 
       #{score,jdbcType=INTEGER}, #{testTime,jdbcType=DATE})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhifa.gdou.model.ScoreSheet" >
-    insert into score_sheet
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="studentnum != null" >
-        studentNum,
-      </if>
-      <if test="course != null" >
-        course,
-      </if>
-      <if test="score != null" >
-        score,
-      </if>
-      <if test="testTime != null" >
-        test_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="studentnum != null" >
-        #{studentnum,jdbcType=VARCHAR},
-      </if>
-      <if test="course != null" >
-        #{course,jdbcType=VARCHAR},
-      </if>
-      <if test="score != null" >
-        #{score,jdbcType=INTEGER},
-      </if>
-      <if test="testTime != null" >
-        #{testTime,jdbcType=DATE},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhifa.gdou.model.ScoreSheet" >
-    update score_sheet
-    <set >
-      <if test="studentnum != null" >
-        studentNum = #{studentnum,jdbcType=VARCHAR},
-      </if>
-      <if test="course != null" >
-        course = #{course,jdbcType=VARCHAR},
-      </if>
-      <if test="score != null" >
-        score = #{score,jdbcType=INTEGER},
-      </if>
-      <if test="testTime != null" >
-        test_time = #{testTime,jdbcType=DATE},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhifa.gdou.model.ScoreSheet" >
+    <insert id="insertSelective" parameterType="com.zhifa.gdou.model.ScoreSheet">
+        insert into score_sheet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="studentnum != null">
+                studentNum,
+            </if>
+            <if test="course != null">
+                course,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="testTime != null">
+                test_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="studentnum != null">
+                #{studentnum,jdbcType=VARCHAR},
+            </if>
+            <if test="course != null">
+                #{course,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=INTEGER},
+            </if>
+            <if test="testTime != null">
+                #{testTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zhifa.gdou.model.ScoreSheet">
+        update score_sheet
+        <set>
+            <if test="studentnum != null">
+                studentNum = #{studentnum,jdbcType=VARCHAR},
+            </if>
+            <if test="course != null">
+                course = #{course,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=INTEGER},
+            </if>
+            <if test="testTime != null">
+                test_time = #{testTime,jdbcType=DATE},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zhifa.gdou.model.ScoreSheet">
     update score_sheet
     set studentNum = #{studentnum,jdbcType=VARCHAR},
       course = #{course,jdbcType=VARCHAR},
@@ -94,7 +94,7 @@
       test_time = #{testTime,jdbcType=DATE}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateScoreByNumAndCorseAndTestTime">
+    <update id="updateScoreByNumAndCorseAndTestTime">
      update score_sheet
       set score=#{score}
      where
@@ -102,68 +102,77 @@
       course=#{course} and
       studentNum=#{studentNum}
   </update>
-  <select id="findStuNumsByDate" resultType="string">
+    <select id="findStuNumsByDate" resultType="string">
     select distinct studentNum
     from score_sheet
     where test_time=#{testTime}
   </select>
-  <select id="findByTestTime" resultType="com.zhifa.gdou.model.ScoreSheet">
-    select distinct *
-    from score_sheet
-    <where>
-      <if test="testTime!=null">
-        test_time=#{testTime}
-      </if>
-    </where>
+    <select id="findByTestTime" resultType="com.zhifa.gdou.model.ScoreSheet">
+        select distinct *
+        from score_sheet
+        <where>
+            <if test="testTime!=null">
+                test_time=#{testTime}
+            </if>
+        </where>
 
-  </select>
-  <select id="getNewTestDate" resultType="date">
+    </select>
+    <select id="getNewTestDate" resultType="date">
     SELECT test_time FROM score_sheet GROUP BY test_time ORDER BY test_time DESC LIMIT 1
   </select>
 
-  <select id="getGroupByTestTime" resultMap="tempEntity">
-    SELECT
-	studentNum,
-	test_time
-    FROM
+    <select id="getGroupByTestTime" resultMap="tempEntity">
+        SELECT
+        studentNum,
+        test_time
+        FROM
         score_sheet
-    WHERE
+        WHERE
         test_time = #{testTime}
         and studentNum in
-      <foreach collection="stuNums" index="index" item="item" open="(" separator="," close=")">
-        #{item}
-      </foreach>
-    GROUP BY
+        <foreach collection="stuNums" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY
         test_time,
         studentNum
-  </select>
-  <select id="findByNumAndTime" resultType="com.zhifa.gdou.model.ScoreSheet">
+    </select>
+    <select id="findByNumAndTime" resultType="com.zhifa.gdou.model.ScoreSheet">
     select * from score_sheet
     where studentNum=#{studentnum} and test_time=#{testTime}
   </select>
-  <select id="findTestDate" resultType="java.lang.String">
+    <select id="findTestDate" resultType="java.lang.String">
     SELECT  test_time  from score_sheet WHERE studentNum=#{studentnum} GROUP BY test_time ORDER BY test_time desc
   </select>
-  <select id="getScoreByDate" resultType="com.zhifa.gdou.model.ScoreSheet">
+    <select id="getScoreByDate" resultType="com.zhifa.gdou.model.ScoreSheet">
     SELECT  *  from score_sheet WHERE studentNum=#{studentnum} and test_time=#{testTime}
   </select>
-  <select id="getNearOneTime" resultType="java.util.Date">
+    <select id="getNearOneTime" resultType="java.util.Date">
    SELECT  test_time  from score_sheet WHERE studentNum=#{studentnum} GROUP BY test_time ORDER BY test_time desc LIMIT 1
   </select>
-  <select id="findTestDateFormat" resultType="java.util.Date">
+    <select id="findTestDateFormat" resultType="java.util.Date">
      SELECT  test_time  from score_sheet WHERE studentNum=#{studentnum} GROUP BY test_time ORDER BY test_time desc  LIMIT 6
   </select>
-  <select id="findAllTestDate" resultType="java.util.Date">
+    <select id="findAllTestDate" resultType="java.util.Date">
     SELECT distinct test_time  from score_sheet GROUP BY test_time ORDER BY test_time desc
   </select>
-  <select id="getCourseAll" resultType="java.lang.String">
+    <select id="getCourseAll" resultType="java.lang.String">
     SELECT DISTINCT course  from score_sheet WHERE studentNum=#{studentnum} GROUP BY course
   </select>
-  <select id="getScoreByCourse" resultType="com.zhifa.gdou.model.ScoreSheet">
+    <select id="getScoreByCourse" resultType="com.zhifa.gdou.model.ScoreSheet">
      SELECT  * from score_sheet  WHERE studentNum=#{studentnum} and course=#{course} ORDER BY test_time
   </select>
-  <select id="getCourseAllLimit1" resultType="java.lang.String">
+    <select id="getCourseAllLimit1" resultType="java.lang.String">
      SELECT DISTINCT course  from score_sheet WHERE studentNum=#{studentnum} GROUP BY course limit 1
   </select>
+    <select id="getRanking" resultType="com.zhifa.gdou.resultEntity.RankingDTO">
+    SELECT (@i:=@i+1) as ranking,res.* from
+    (SELECT  ss.studentNum, SUM(score) as total FROM score_sheet as ss
+        WHERE  ss.test_time=#{testTime}
+            AND  ss.studentNum in
+            (SELECT ci.studentNum FROM class_info as ci WHERE ci.class_name=(SELECT DISTINCT class_name FROM class_info WHERE studentNum=#{studentnum} LIMIT 1))
+             GROUP BY ss.studentNum ORDER BY total desc
+    ) as res,(select  @i:=0) as i
+    </select>
 
 </mapper>

@@ -11,6 +11,7 @@ import com.zhifa.gdou.mapper.StudentInfoMapper;
 import com.zhifa.gdou.model.LeavingMessage;
 import com.zhifa.gdou.model.ScoreSheet;
 import com.zhifa.gdou.model.StudentInfo;
+import com.zhifa.gdou.resultEntity.RankingDTO;
 import com.zhifa.gdou.resultEntity.ScoreVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +96,7 @@ public class StudenController {
 
 
     /**
-     * 通过日期查询各门成绩
+     * 通过日期查询各门成绩  主页面加载
      * @param session
      * @param testTime
      * @return
@@ -108,6 +109,18 @@ public class StudenController {
             testTime= scoreSheetMapper.getNearOneTime(student.getStudentnum());
         }
         List<ScoreSheet> scoreSheets = scoreSheetMapper.findByNumAndTime(student.getStudentnum(), testTime);
+        /**
+         * 某次考试中 得到全班人的总分排名
+         */
+        List<RankingDTO> rankings = scoreSheetMapper.getRanking(student.getStudentnum(), testTime);
+
+        RankingDTO rk=new RankingDTO();
+        for (int i = 0; i < rankings.size(); i++) {
+            if (rankings.get(i).getStudentNum().equals(student.getStudentnum())){
+                rk = rankings.get(i);
+                break;
+            }
+        }
         JSONObject jsonObject = new JSONObject();
         Map<String,Object>map=new HashMap<>();
         List<ScoreVo> data=new LinkedList<>();
@@ -123,9 +136,12 @@ public class StudenController {
             json.put("const","const");
             jsonArray.add(json);
         }
+
+
         jsonObject.put("map",map);
         jsonObject.put("data",data);
         jsonObject.put("data3",jsonArray);
+        jsonObject.put("ranking",rk);
         return jsonObject;
 
 
@@ -138,6 +154,7 @@ public class StudenController {
      */
     @RequestMapping("/wx/getScoreAll")
     public Object getScoreAll(HttpSession session){
+        log.info("最近半年成绩");
         StudentInfo student = (StudentInfo) session.getAttribute("student");
 
         List<Date> dates = scoreSheetMapper.findTestDateFormat(student.getStudentnum());
@@ -175,6 +192,7 @@ public class StudenController {
      */
     @RequestMapping("/wx/getScoreByCourse")
     public Object getScoreByCourse(HttpSession session,String course ){
+        log.info("查询该学生历年的单科成绩");
         StudentInfo student = (StudentInfo) session.getAttribute("student");
         if (StringUtils.isEmpty(course)){
             course = scoreSheetMapper.getCourseAllLimit1(student.getStudentnum());
@@ -212,6 +230,7 @@ public class StudenController {
      */
     @RequestMapping("/wx/getLeavingMsg")
     public Object getLeavingMsg(HttpSession session){
+        log.info("根据学生查询班主任所有留言");
         StudentInfo student = (StudentInfo) session.getAttribute("student");
         String teacherNum = classInfoMapper.findTeacherNumByStuNum(student.getStudentnum());
         List<LeavingMessage> messages = leavingMessageMapper.getTeacherLeavingContent(teacherNum);

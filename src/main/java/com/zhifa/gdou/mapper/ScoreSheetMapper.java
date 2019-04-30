@@ -1,6 +1,7 @@
 package com.zhifa.gdou.mapper;
 
 import com.zhifa.gdou.model.ScoreSheet;
+import com.zhifa.gdou.resultEntity.RankingDTO;
 import com.zhifa.gdou.utils.ScoreTempEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -74,5 +75,14 @@ public interface ScoreSheetMapper {
 
 
     List<ScoreSheet>getScoreByCourse(@Param("studentnum") String studentnum,@Param("course") String course);
+
+    /**
+     * 某次考试中 得到全班人的总分排名
+     * @param studentnum
+     * @param testTime
+     * @return
+     */
+
+    List<RankingDTO> getRanking(@Param("studentnum") String studentnum, @Param("testTime") Date  testTime);
 
 }

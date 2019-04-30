@@ -108,7 +108,12 @@
      set state=0
      where id=#{id}
   </update>
-  <!--自定义sql实现-->
+    <update id="updateOpenIdByOpenId">
+     update teacher
+     set  openId =''
+     where openId = #{openId,jdbcType=VARCHAR}
+    </update>
+    <!--自定义sql实现-->
   <select id="findAll" resultType="com.zhifa.gdou.model.Teacher">
     select * from teacher
     <where>

@@ -24,13 +24,25 @@
 <div class="weui-tab">
     <div class="weui-tab__bd">
         <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
-            <div class="chart-wrapper" style="height: 42%;" >
+            <div class="chart-wrapper"  >
                 <canvas id="mountNode"></canvas>
             </div>
-            <div class="chart-wrapper" style="height: 35%;" >
+            <div class="chart-wrapper"  >
                 <canvas id="mountNode2"></canvas>
             </div>
-            <div class="weui-cells weui-cells_form" style="height: auto;" >
+            <div class="weui-panel weui-panel_access">
+                <div class="weui-panel__hd">班级排名情况</div>
+                <div class="weui-panel__bd">
+                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">总分: <span  id="total"></span></h4>
+                            <br>
+                            <p class="weui-media-box__desc" id="ranking"></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="weui-cells weui-cells_form" >
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">考试日期</label></div>
                     <div class="weui-cell__bd">
@@ -38,14 +50,15 @@
                     </div>
                 </div>
             </div>
+            <br> <br><br>
         </div>
 
 
         <div id="tab2" class="weui-tab__bd-item">
-            <div class="chart-wrapper" style="height: 45%;width: auto"  >
+            <div class="chart-wrapper"   >
                 <canvas id="getScoreAll"></canvas>
             </div>
-            <div class="chart-wrapper" style="height: 55%;width: auto"  >
+            <div class="chart-wrapper" >
                 <canvas id="getScoreAll2"></canvas>
             </div>
 
@@ -77,6 +90,7 @@
                     </div>
                 </div>
             </div>
+            <br>
         </div>
 
         <div id="tab4" class="weui-tab__bd-item">
@@ -90,14 +104,14 @@
             </div>
             <p class="weui-tabbar__label">成绩</p>
         </a>
-        <a href="#tab2" class="weui-tabbar__item">
+        <a href="#tab2" class="weui-tabbar__item" onclick="dotab2()">
             <div class="weui-tabbar__icon">
                 <img src="./images/icon_nav_article.png" alt="">
             </div>
             <p class="weui-tabbar__label">成绩分析</p>
         </a>
 
-        <a href="#tab3" class="weui-tabbar__item">
+        <a href="#tab3" class="weui-tabbar__item"  onclick="dotab3()">
             <div class="weui-tabbar__icon">
                 <img src="./images/icon_nav_msg.png" alt="">
             </div>

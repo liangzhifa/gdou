@@ -1,6 +1,44 @@
 var testCourse=new Array();
 $(document).ready(function(){
+    /*页面 4 的 留言查询*/
+    $.ajax({
+        url:"/wx/getLeavingMsg",
+        success:function(result){
+            var tab4 = $("#tab4");
+            if (result!=null){
+                console.log(result)
+                for (var res in result) {
 
+                    res=result[res]
+                    var temp=
+                        '<div class="weui-form-preview">'+
+                        '<div class="weui-form-preview__bd">'+
+                        '<label class="weui-form-preview__label">留言类型</label>'+
+                        '<span class="weui-form-preview__value">'+res.type+'</span>'+
+                        '</div>'+
+                        '<div class="weui-form-preview__bd">'+
+                        '<div class="weui-form-preview__item">'+
+                        '<label class="weui-form-preview__label">内容</label>'+
+                        ' <span class="weui-form-preview__value">'+res.content+'</span>'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="weui-form-preview__bd">'+
+                        '<div class="weui-form-preview__item">'+
+                        '<label class="weui-form-preview__label">留言时间</label>'+
+                        ' <span class="weui-form-preview__value">'+res.creatTime+'</span>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>';
+                    $("#tab4").append(temp)
+                    $("#tab4").append(" </br>");
+                }
+            }
+
+        }
+    });
+});
+
+function dotab3(){
     /*获取该学生所有的课程*/
     $.getJSON('/wx/getCourseAll', function(res) {
         for (var i=0;i<res.length;i++){
@@ -12,44 +50,9 @@ $(document).ready(function(){
         console.log(JSON.stringify(result))
         getScoresByCourse(result.data,result.ticks)
     });
-    /*页面 4 的 留言查询*/
-    $.ajax({
-        url:"/wx/getLeavingMsg",
-        success:function(result){
-                var tab4 = $("#tab4");
-                if (result!=null){
-                    console.log(result)
-                    for (var res in result) {
+}
 
-                        res=result[res]
-                        var temp=
-                            '<div class="weui-form-preview">'+
-                                '<div class="weui-form-preview__bd">'+
-                                    '<label class="weui-form-preview__label">留言类型</label>'+
-                                    '<span class="weui-form-preview__value">'+res.type+'</span>'+
-                                '</div>'+
-                                '<div class="weui-form-preview__bd">'+
-                                    '<div class="weui-form-preview__item">'+
-                                        '<label class="weui-form-preview__label">内容</label>'+
-                                        ' <span class="weui-form-preview__value">'+res.content+'</span>'+
-                                    '</div>'+
-                                '</div>'+
-                                '<div class="weui-form-preview__bd">'+
-                                    '<div class="weui-form-preview__item">'+
-                                        '<label class="weui-form-preview__label">留言时间</label>'+
-                                        ' <span class="weui-form-preview__value">'+res.creatTime+'</span>'+
-                                    '</div>'+
-                                '</div>'+
-                            '</div>';
-                        $("#tab4").append(temp)
-                        $("#tab4").append(" </br>");
-                    }
-                }
 
-        }
-    });
-
-});
 $("#tap3Course").picker({
     title: "请选择考试科目:",
     cols: [
@@ -69,7 +72,6 @@ $("#tap3Course").picker({
 
                 console.log(JSON.stringify(result.data.length))
                 getScoresByCourse(result.data,result.ticks);
-
                 $.toptip('成功', 'success');
             }
         });

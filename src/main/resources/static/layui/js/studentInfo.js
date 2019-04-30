@@ -20,7 +20,10 @@ $(document).ready(function(){
         url:"/wx/getScoreByDate",
         dataType:"json",
         success:function(result){
-            //console.log("/wx/getScoreByDate "+result);
+            console.log(result.ranking.total);
+
+            $("#total").html(result.ranking.total);
+            $("#ranking").html("你在的班级排名: "+result.ranking.ranking);
             map=result.map;
             data=result.data;
             data3=result.data3;
@@ -59,20 +62,21 @@ $("#score").picker({
             url:"/wx/getScoreByDate",
             data: {testTime:p["value"][0]},
             success:function(result){
+                console.log(result);
                 map=result.map;
                 data=result.data;
                 data3=result.data3;
                 //scoreX1(map,data);
                 scoreX3(data3);
                 scoreX2(data);
+                $("#total").html(result.ranking.total);
+                $("#ranking").html("你在的班级排名: "+result.ranking.ranking);
                 $.toptip('成功', 'success');
             }
         });
     }
 
 });
-
-
 
 function scoreX1(map, data) {
     var chart = new F2.Chart({

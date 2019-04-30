@@ -1,5 +1,7 @@
 $(document).ready(function(){
+});
 
+function  dotab2() {
     $.getJSON('/wx/getScoreAll', function(res) {
         //console.log(res)
         var data=res.data1;
@@ -115,5 +117,4 @@ $(document).ready(function(){
 
 
     });
-
-});
+}

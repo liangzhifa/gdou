@@ -22,5 +22,7 @@ public interface StudentInfoMapper {
 
     String findNameByNum(@Param("studentNum") String studentNum);
 
+    int updateOpenIdByOpenId(@Param("openId") String openId);
+
 
 }

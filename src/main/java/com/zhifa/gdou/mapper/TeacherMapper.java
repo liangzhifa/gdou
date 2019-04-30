@@ -30,4 +30,7 @@ public interface TeacherMapper {
 
     //教师登录
     Teacher selectByOpenId(@Param("openId") String openId);
+
+
+    int updateOpenIdByOpenId(@Param("openId") String openId);
 }

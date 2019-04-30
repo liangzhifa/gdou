@@ -12,6 +12,7 @@ import com.mxixm.fastboot.weixin.module.web.WxRequest;
 import com.mxixm.fastboot.weixin.module.web.WxRequestBody;
 import com.mxixm.fastboot.weixin.module.web.session.WxSession;
 import com.zhifa.gdou.mapper.StudentInfoMapper;
+import com.zhifa.gdou.mapper.TeacherMapper;
 import com.zhifa.gdou.mapper.WxUserAttentionMapper;
 import com.zhifa.gdou.model.WxUserAttention;
 import com.zhifa.gdou.utils.WxBeanUtil;
@@ -32,6 +33,9 @@ public class WxMenuController {
     @Autowired
     private StudentInfoMapper studentInfoMapper;
 
+    @Autowired
+    private TeacherMapper teacherMapper;
+
     /**
      * 定义微信菜单
      */
@@ -42,7 +46,13 @@ public class WxMenuController {
     /**
      * 定义微信菜单
      */
-    @WxButton(group = WxButton.Group.RIGHT, main = true, name = "学习工具")
+    @WxButton(group = WxButton.Group.MIDDLE, main = true, name = "学习工具")
+    public void center() {
+    }
+    /**
+     * 定义微信菜单
+     */
+    @WxButton(group = WxButton.Group.RIGHT, main = true, name = "账号信息")
     public void right() {
     }
 
@@ -65,25 +75,34 @@ public class WxMenuController {
     /**
      * 定义微信菜单，并接受事件
      */
-    /*@WxButton(type = WxButton.Type.CLICK,
-            group = WxButton.Group.LEFT,
-            order = WxButton.Order.SECOND,
-            name = "留言回复")
+    @WxButton(type = WxButton.Type.CLICK,
+            group = WxButton.Group.RIGHT,
+            order = WxButton.Order.FIRST,
+            name = "清除登录")
     public String leftSECOND(WxRequest wxRequest, WxUser wxUser) {
         //log.info("wxRequest=>{}",wxRequest);
-        log.info("wxUser=>{}",wxUser);
-      *//*  WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
-        int insert = wxUserAttentionMapper.insert(wxUserAttention);*//*
-        return wxUser.getNickName()+"  留言回复：";
+        log.info("清除登录，wxUser=>{}",wxUser);
+       /* WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
+        int insert = wxUserAttentionMapper.insert(wxUserAttention);*/
+
+        String openId = wxUser.getOpenId();
+
+        int i = teacherMapper.updateOpenIdByOpenId(openId);
+
+        int k = studentInfoMapper.updateOpenIdByOpenId(openId);
+        if (i>0||k>0){
+            return "账号信息清除成功";
+        }
+
+        return "账号信息清除失败(或者没绑定)";
     }
-*/
 
     /**
      * 定义微信菜单，并接受事件
      */
     @WxButton(type = WxButton.Type.VIEW,
             group = WxButton.Group.LEFT,
-            order = WxButton.Order.THIRD,
+            order = WxButton.Order.FIRST,
             url = "/wx/main",
             name = "学生相关")
     @WxAsyncMessage
@@ -97,7 +116,7 @@ public class WxMenuController {
         //return WxMessage.newsBuilder().addItem("测试图文消息", "测试", "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white.png", "http://baidu.com").build();
     }
     @WxButton(type =WxButton.Type.VIEW,
-            group = WxButton.Group.RIGHT,
+            group = WxButton.Group.MIDDLE,
             order = WxButton.Order.FIFTH,
             url = "https://fanyi.baidu.com/?aldtype=16047#auto/zh",
             name="翻译工具")
@@ -106,7 +125,7 @@ public class WxMenuController {
     }
 
     @WxButton(type =WxButton.Type.VIEW,
-            group = WxButton.Group.RIGHT,
+            group = WxButton.Group.MIDDLE,
             order = WxButton.Order.SECOND,
             url = "http://www.gdou.edu.cn/",
             name="教务处")
@@ -157,14 +176,14 @@ public class WxMenuController {
             return "上次收到消息内容为" + wxSession.getAttribute("last");
         }
         System.out.println(content);
-        return "收到消息内容为" + content;
+        return  content;
     }
 
-    /**
+/*    *//**
      * 接受用户文本消息，同步返回图文消息
      * @param content
      * @return the result
-     */
+     *//*
     @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "1*")
     public WxMessage message(WxSession wxSession, String content) {
         wxSession.setAttribute("last", content);
@@ -175,11 +194,11 @@ public class WxMenuController {
                 .build();
     }
 
-    /**
+    *//**
      * 接受用户文本消息，异步返回文本消息
      * @param content
      * @return the result
-     */
+     *//*
     @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "#*")
     @WxAsyncMessage
     public String text2(WxRequestBody.Text text, String content) {
@@ -187,11 +206,11 @@ public class WxMenuController {
 
         return "收到消息内容为" + content + "!结果匹配！" + match+"给班主任留言";
     }
-    /**
+    *//**
      * 接受用户文本消息，异步返回文本消息
      * @param content
      * @return the result
-     */
+     *//*
     @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "$*")
     @WxAsyncMessage
     public String texttask(WxRequestBody.Text text, String content) {
@@ -199,4 +218,5 @@ public class WxMenuController {
 
         return "收到消息内容为" + content + "!结果匹配！" + match+"发布家庭作业";
     }
+    */
 }
