@@ -131,9 +131,8 @@ public class StudenController {
             map.put(scoreSheet.getCourse(),scoreSheet.getScore());
             data.add(new ScoreVo(scoreSheet.getCourse(),(scoreSheet.getScore()/100.0)));
             json=new JSONObject();
-            json.put("name",scoreSheet.getCourse());
-            json.put("y",scoreSheet.getScore());
-            json.put("const","const");
+            json.put("year",scoreSheet.getCourse());
+            json.put("sales",scoreSheet.getScore());
             jsonArray.add(json);
         }
 

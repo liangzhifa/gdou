@@ -1,8 +1,9 @@
 package com.zhifa.gdou.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ScoreSheet {
+public class ScoreSheet implements Serializable {
     private Integer id;
 
     private String studentnum;

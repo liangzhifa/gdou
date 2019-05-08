@@ -29,7 +29,8 @@ $(document).ready(function(){
             data3=result.data3;
             //console.log("data  "+JSON.stringify(data));
             //scoreX1(map,data);
-            scoreX3(data3);
+            console.log(data3)
+            scoreX4(data3);
             scoreX2(data);
         }
     });
@@ -67,7 +68,7 @@ $("#score").picker({
                 data=result.data;
                 data3=result.data3;
                 //scoreX1(map,data);
-                scoreX3(data3);
+                scoreX4(data3);
                 scoreX2(data);
                 $("#total").html(result.ranking.total);
                 $("#ranking").html("你在的班级排名: "+result.ranking.ranking);
@@ -78,45 +79,6 @@ $("#score").picker({
 
 });
 
-function scoreX1(map, data) {
-    var chart = new F2.Chart({
-        id: 'mountNode',
-        pixelRatio: window.devicePixelRatio
-    });
-    chart.clear(); // 清除
-    chart.source(data, {
-        percent: {
-            formatter: function formatter(val) {
-                return val * 100 + '%';
-            }
-        }
-    });
-    chart.legend({
-        position: 'right',
-        itemFormatter: function itemFormatter(val) {
-            return val + '  ' + map[val];
-        }
-    });
-    chart.tooltip(false);
-    chart.coord('polar', {
-        transposed: true,
-        radius: 0.75
-    });
-    chart.axis(false);
-    chart.interval().position('a*percent').color('name', ['#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864', '#8543E0']).adjust('stack').style({
-        lineWidth: 1,
-        stroke: '#fff',
-        lineJoin: 'round',
-        lineCap: 'round'
-    }).animate({
-        appear: {
-            duration: 1200,
-            easing: 'bounceOut'
-        }
-    });
-    chart.render();
-
-}
 function scoreX2(data){
     var chart = new F2.Chart({
         id: 'mountNode2',
@@ -221,6 +183,99 @@ function scoreX3(data) {
     chart.render();
 
 
+}
+function scoreX4(data) {
+   /* var data = [{
+        year: '1951 年',
+        sales: 38
+    }, {
+        year: '1952 年',
+        sales: 52
+    }, {
+        year: '1956 年',
+        sales: 61
+    }, {
+        year: '1957 年',
+        sales: 145
+    }, {
+        year: '1958 年',
+        sales: 48
+    }, {
+        year: '1959 年',
+        sales: 38
+    }, {
+        year: '1960 年',
+        sales: 38
+    }, {
+        year: '1962 年',
+        sales: 38
+    }];*/
+    var chart = new F2.Chart({
+        id: 'mountNode',
+        pixelRatio: window.devicePixelRatio
+    });
+
+    chart.source(data, {
+        sales: {
+            tickCount: 5
+        }
+    });
+    chart.tooltip(false);
+    chart.interval().position('year*sales');
+    chart.render();
+
+    // 绘制柱状图文本
+    var offset = -5;
+    var canvas = chart.get('canvas');
+    var group = canvas.addGroup();
+    var shapes = {};
+    data.map(function(obj) {
+        var point = chart.getPosition(obj);
+        var text = group.addShape('text', {
+            attrs: {
+                x: point.x,
+                y: point.y + offset,
+                text: obj.sales,
+                textAlign: 'center',
+                textBaseline: 'bottom',
+                fill: '#808080'
+            }
+        });
+
+        shapes[obj.year] = text; // 缓存该 shape, 便于后续查找
+    });
+
+    var lastTextShape = void 0; // 上一个被选中的 text
+    // 配置柱状图点击交互
+    chart.interaction('interval-select', {
+        selectAxisStyle: {
+            fill: '#000',
+            fontWeight: 'bold'
+        },
+        mode: 'range',
+       /* defaultSelected: {
+            year: '1962 年',
+            sales: 38
+        },*/
+        onEnd: function onEnd(ev) {
+            var data = ev.data,
+                selected = ev.selected;
+
+            lastTextShape && lastTextShape.attr({
+                fill: '#808080',
+                fontWeight: 'normal'
+            });
+            if (selected) {
+                var textShape = shapes[data.year];
+                textShape.attr({
+                    fill: '#000',
+                    fontWeight: 'bold'
+                });
+                lastTextShape = textShape;
+            }
+            canvas.draw();
+        }
+    });
 }
 
 

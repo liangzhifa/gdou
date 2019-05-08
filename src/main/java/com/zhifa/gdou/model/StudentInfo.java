@@ -1,6 +1,8 @@
 package com.zhifa.gdou.model;
 
-public class StudentInfo {
+import java.io.Serializable;
+
+public class StudentInfo implements Serializable {
     private Integer id;
 
     private String studentname;
