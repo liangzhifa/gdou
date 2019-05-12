@@ -32,4 +32,20 @@ public interface ClassInfoMapper {
     List<String>findStuNum(@Param("headMasterNum") String headMasterNum);
 
     String findTeacherNumByStuNum(@Param("studentNum") String studentNum);
+
+    List<ClassInfo> findAllStudents(@Param("className") String className);
+
+    String selcetClassNameByStuNo(@Param("studentnum") String studentnum);
+
+    int updateClassNameByStuNo(@Param("className") String className,@Param("studentnum") String studentnum );
+
+    ClassInfo findClassByClassName(@Param("className") String className);
+
+    ClassInfo findClassByStuNo(@Param("studentnum") String studentnum);
+
+    List<ClassInfo> findClassInfosByClassName(@Param("className") String className);
+
+    int deleteByClassName(@Param("className") String className);
+
+    int deleteClassInfoByStuNo(@Param("studentnum") String studentnum);
 }

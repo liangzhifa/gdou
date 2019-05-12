@@ -3,6 +3,8 @@ package com.zhifa.gdou.mapper;
 import com.zhifa.gdou.model.StudentInfo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface StudentInfoMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -24,5 +26,7 @@ public interface StudentInfoMapper {
 
     int updateOpenIdByOpenId(@Param("openId") String openId);
 
+
+    List<StudentInfo> findAllStudents(@Param("studentname") String studentname);
 
 }

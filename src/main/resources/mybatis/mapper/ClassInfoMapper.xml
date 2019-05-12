@@ -33,10 +33,40 @@
     select distinct head_master_num from class_info
     where studentNum=#{studentNum} limit 1
   </select>
+    <select id="findAllStudents" resultType="com.zhifa.gdou.model.ClassInfo">
+      select DISTINCT *  from class_info
+      <where>
+        <if test="className !=null and className != ''">
+          and class_name like #{className}
+        </if>
+      </where>
+      GROUP  BY class_name
+    </select>
+  <select id="selcetClassNameByStuNo" resultType="java.lang.String">
+    SELECT DISTINCT  class_name FROM class_info WHERE studentNum=#{studentnum}
+  </select>
+
+  <select id="findClassByClassName" resultType="com.zhifa.gdou.model.ClassInfo">
+    SELECT DISTINCT  * FROM class_info WHERE class_name=#{className} LIMIT 1
+  </select>
+  <select id="findClassByStuNo" resultType="com.zhifa.gdou.model.ClassInfo">
+     SELECT DISTINCT  *  FROM class_info WHERE studentNum=#{studentnum} LIMIT 1
+  </select>
+  <select id="findClassInfosByClassName" resultType="com.zhifa.gdou.model.ClassInfo">
+     SELECT DISTINCT  * FROM class_info WHERE class_name=#{className}
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from class_info
     where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByClassName">
+     delete from class_info
+    where class_name = #{className}
+  </delete>
+  <delete id="deleteClassInfoByStuNo">
+     delete from class_info
+    where studentNum = #{studentnum}
   </delete>
   <insert id="insert" parameterType="com.zhifa.gdou.model.ClassInfo" >
     insert into class_info (id, class_num, class_name, 
@@ -111,6 +141,9 @@
     update class_info
     set head_master_num =#{head_master_num}
     where class_name=#{class_name}
+  </update>
+  <update id="updateClassNameByStuNo">
+    update class_info set class_name=#{className} WHERE studentNum=#{studentnum}
   </update>
 
 </mapper>

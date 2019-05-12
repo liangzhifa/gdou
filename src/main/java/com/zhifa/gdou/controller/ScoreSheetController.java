@@ -269,17 +269,42 @@ public class ScoreSheetController {
         * "wuli":"90","huaxue":"90","shengwu":"90"
         * */
         Map<Object,Object>map=new HashMap<>();
-        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"语文",yuwen);
-        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"数学",shuxue);
-        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"英语",yingyu);
-        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"物理",wuli);
-        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"化学",huaxue);
+        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"语文",yuwen  );
+        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"数学",shuxue );
+        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"英语",yingyu );
+        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"物理",wuli   );
+        scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"化学",huaxue );
         scoreSheetMapper.updateScoreByNumAndCorseAndTestTime(testTime,studentNum,"生物",shengwu);
         map.put("code",0);
         map.put("msg","修改成功");
         return map;
     }
-
+    @RequestMapping("/student/modifyscore")
+    public Object studentmodifyscore(Date testTime,String studentNum,
+                                Integer yuwen,Integer shuxue,Integer yingyu,
+                                Integer wuli,Integer huaxue,Integer shengwu){
+        /*
+         * "testTime":"2019-05-13","studentNum":"2018",
+         * "yuwen":"99","shuxue":"98","yingyu":"90",
+         * "wuli":"90","huaxue":"90","shengwu":"90"
+         * */
+        Map<Object,Object>map=new HashMap<>();
+        try {
+            scoreSheetMapper.insert(new ScoreSheet(studentNum,"语文",yuwen  ,testTime));
+            scoreSheetMapper.insert(new ScoreSheet(studentNum,"数学",shuxue ,testTime));
+            scoreSheetMapper.insert(new ScoreSheet(studentNum,"英语",yingyu ,testTime));
+            scoreSheetMapper.insert(new ScoreSheet(studentNum,"物理",wuli   ,testTime));
+            scoreSheetMapper.insert(new ScoreSheet(studentNum,"化学",huaxue ,testTime));
+            scoreSheetMapper.insert(new ScoreSheet(studentNum,"生物",shengwu,testTime));
+        } catch (Exception e) {
+            map.put("code",1);
+            map.put("msg","操作失败");
+            return map;
+        }
+        map.put("code",0);
+        map.put("msg","操作成功");
+        return map;
+    }
 
     /**
      * 获取考试时间

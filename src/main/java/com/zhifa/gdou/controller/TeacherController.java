@@ -7,15 +7,16 @@ import com.zhifa.gdou.mapper.TeacherMapper;
 import com.zhifa.gdou.model.Teacher;
 import com.zhifa.gdou.resultEntity.LayUIDataGrid;
 import com.zhifa.gdou.service.TeacherService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/teacher")
 public class TeacherController {
+    private static final Logger loger = LoggerFactory.getLogger(TeacherController.class);
+
 
     @Autowired
     TeacherService teacherService;
@@ -40,6 +43,8 @@ public class TeacherController {
             map.put("msg","账号、密码不能空");
             return map;
         }
+        teacherPassword = DigestUtils.md5DigestAsHex(teacherPassword.getBytes());
+        loger.info("登录密码：{}",teacherPassword);
         Teacher teacher = teacherMapper.selectByNameAndPass(teacherNum, teacherPassword);
         if (teacher==null){
             map.put("code", 1);
@@ -85,13 +90,13 @@ public class TeacherController {
         return map;
     }
     @RequestMapping("/insertTeacherInfo")
-    public Object insertTeacherInfo(String teacherName){
+    public Object insertTeacherInfo(String teacherName,String teacherPassword){
         Map<String,Object> map=new HashMap<>();
         Teacher teacher=new Teacher();
         teacher.setTeacherName(teacherName);
         String teacherNumAndPass="gdou"+teacherName.hashCode();
         teacher.setTeacherNum(teacherNumAndPass);
-        teacher.setTeacherPassword(teacherNumAndPass);
+        teacher.setTeacherPassword(DigestUtils.md5DigestAsHex(teacherPassword.getBytes()));
         teacher.setState(Byte.valueOf("1"));
         int insert = teacherMapper.insert(teacher);
         if (insert>0){
@@ -110,7 +115,9 @@ public class TeacherController {
         int i=0,j=0;
         if (!ObjectUtils.isEmpty(teacherPassword)){
             Teacher teacher = teacherMapper.selectByPrimaryKey(id);
+            teacherPassword = DigestUtils.md5DigestAsHex(teacherPassword.getBytes());
             teacher.setTeacherPassword(teacherPassword);
+            loger.info("修改登录密码：{}",teacherPassword);
             i = teacherMapper.updateByPrimaryKeySelective(teacher);
             if (i<=0){
                 throw new RuntimeException();

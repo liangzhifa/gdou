@@ -13,6 +13,17 @@ public class StudentInfo implements Serializable {
 
     private String openid;
 
+
+    private String className;
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -61,6 +72,7 @@ public class StudentInfo implements Serializable {
                 ", studentnum='" + studentnum + '\'' +
                 ", studentpass='" + studentpass + '\'' +
                 ", openid='" + openid + '\'' +
+                ", className='" + className + '\'' +
                 '}';
     }
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>教师信息管理</title>
+    <title>班级信息管理</title>
     <style>
         body{margin: 10px;}
         .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
@@ -14,11 +14,11 @@
 
 </head>
 <body>
-<blockquote class="layui-elem-quote">教师信息管理:教师信息的CRUD功能，可选择显示列，导出、打印教师信息</blockquote>
+<blockquote class="layui-elem-quote">班级信息管理:班级信息的CRUD功能，可选择显示列，导出、打印班级信息</blockquote>
 <div class="demoTable">
-    教师名字：
+    班级名称：
     <div class="layui-inline">
-        <input class="layui-input" name="teacherName" id="demoReload" autocomplete="on" onkeydown="keyup_submit(event);">
+        <input class="layui-input" name="className" id="demoReload" autocomplete="on" onkeydown="keyup_submit(event);">
     </div>
     <button class="layui-btn" data-type="reload" lay-event="reload" id="search">搜索</button>
 </div>
@@ -30,15 +30,17 @@
             </div>
         </div>
         <div class="layui-form-item center" >
-            <label class="layui-form-label" >教师名称</label>
+            <label class="layui-form-label" >班级编号</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="teacherName" required placeholder="请输入教师名称" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" name="classNum" required placeholder="请输入班级编号" autocomplete="off" class="layui-input">
             </div>
             <br>
-            <label class="layui-form-label" >登录密码</label>
+            <label class="layui-form-label" >班级名称</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="teacherPassword" required placeholder="登录密码" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" name="className" required placeholder="请输入班级名称" autocomplete="off" class="layui-input">
             </div>
+            <br>
+
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
@@ -50,26 +52,19 @@
 </div>
 <div id="add-modofy" style="display: none;">
     <form class="layui-form" id="modify-form"  action="">
+        <br>
         <div class="layui-form-item center" >
-            <label class="layui-form-label" >教 师：</label>
+            <label class="layui-form-label" >班级编号：</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" disabled id="teachNo" class="layui-input">
+                <input type="text" style="width: 320px;" required placeholder="班级编号：" autocomplete="off"  name="classNum" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item center" >
-            <label class="layui-form-label" >更改密码：</label>
+            <label class="layui-form-label" >班级名称：</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="teacherPassword" required placeholder="新密码：" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" name="className" required placeholder="班级名称：" autocomplete="off" class="layui-input">
             </div>
         </div>
-
-        <div class="layui-form-item center" >
-            <label class="layui-form-label" >班主任：</label>
-            <div class="layui-input-block">
-                <select id="selectID" style="width: 320px;"  name="headMasterNum" class="layui-input"></select>
-            </div>
-        </div>
-
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="formmodify">立即提交</button>
@@ -126,7 +121,7 @@
 
         table.render({
             elem: '#test'
-            ,url:'/teacher/findAllTeachers'
+            ,url:'/classInfo/findAllclassInfos'
             ,toolbar: '#toolbarDemo'
            /* ,toolbar: 'default'*/
            /* ,toolbar: true*/
@@ -134,11 +129,9 @@
             ,title: '用户数据表'
             ,cols: [[
                  {field:'id', title:'ID', width:80, fixed: 'left', unresize: true , align: 'center'}
-                ,{field:'teacherNum', title:'教师编号', width:150 , align: 'center' }
-                ,{field:'teacherName', title:'教师名字', width:100  , align: 'center' }
-                ,{field:'teacherPassword', title:'登录密码', width:150, align: 'center'}
-                ,{field:'className', title:'班主任', width:100, align: 'center'}
-                ,{field:'openid', title:'微信id',width:400, align: 'center'}
+                ,{field:'classNum', title:'班级编号', width:150 , align: 'center' }
+                ,{field:'className', title:'班级名字', width:100  , align: 'center' }
+                ,{field:'headMasterNum', title:'班主任', width:150, align: 'center'}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:120 , align: 'center'}
             ]]
             ,page: true
@@ -199,10 +192,10 @@
                 layer.msg('查看操作: '+JSON.stringify(data));
             } else if(layEvent === 'del'){
                 //  <span class="layui-badge layui-bg-blue">蓝</span>
-                layer.confirm('真的删除工号:<span class="layui-badge layui-bg-blue">'+data.teacherNum+'</span> ,名字:<span class="layui-badge layui-bg-blue">'+data.teacherName+'</span> 的老师吗?', function(index){
+                layer.confirm('删除编号:<span class="layui-badge layui-bg-blue">'+data.classNum+'</span> ,名称:<span class="layui-badge layui-bg-blue">'+data.className+'</span> 的班级吗?', function(index){
                     //向服务端发送删除指令
                     $.ajax({
-                        url:"/teacher/deleteById",
+                        url:"/classInfo/deleteById",
                         type:"post",
                         data:{id:data.id},
                         success:function(result){
@@ -274,23 +267,16 @@
         //但是，如果你的HTML是动态生成的，自动渲染就会失效
         //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();
         form.render();
-        $.ajax({
-            url:'/classInfo/getClassName',
-            dataType:'json',
-            type:'post',
-            success:function(data){
-                $.each(data,function(index,item){
-                    $('#selectID').append(new Option(item.name,item.id));//往下拉菜单里添加元素
-                })
-                form.render();//菜单渲染 把内容加载进去
-            }
-        });
         //监听提交
         form.on('submit(formDemo)', function(data){
             console.log(JSON.stringify(data.field));
+            if(data.field.className==''||data.field.classNum==''){
+                layer.msg("班级名称和编号都不能为空");
+                return;
+            }
             /*提交表单*/
             $.ajax({
-                url:'/teacher/insertTeacherInfo',
+                url:'/classInfo/insertclassInfo',
                 method:'post',
                 data:data.field,
                 dataType:'JSON',
@@ -300,7 +286,7 @@
                         layer.msg(res.msg);
                         layer.close(insertVar); //如果设定了yes回调，需进行手工关闭
                         $("#add-modofy").css("display","none");
-                        window.location.replace("/manager/teacherInfo");
+                        window.location.replace("/manager/class_info");
                         //刷新表单
                         layui.table.reload('test', {
                             page: {
@@ -322,12 +308,15 @@
         form.on('submit(formmodify)', function(data){
             $('#modifyReset').trigger("click");
             console.log(JSON.stringify(data.field));
+           /* if (data.field.className==''||data.field.classNum=='') {
+                layer.msg("名称和编号不能为空");
+                return;
+            }*/
             /*提交表单*/
             $.ajax({
-                url:'/teacher/modify',
+                url:'/classInfo/modify',
                 method:'post',
-                data:{className:data.field.headMasterNum,teacherPassword:data.field.teacherPassword,
-                      teacherNum:modifyData.teacherNum,id:modifyData.id},
+                data:{className:data.field.className,classNum:data.field.classNum,id:modifyData.id},
                 dataType:'JSON',
                 success:function(res){
                     console.log(res);
@@ -335,7 +324,7 @@
                         layer.msg(res.msg);
                         layer.close(modifyVar);//如果设定了yes回调，需进行手工关闭
                         $("#add-main").css("display","none");
-                        window.location.replace("/manager/teacherInfo");
+                        window.location.replace("/manager/class_info");
                         //刷新表单
                         layui.table.reload('test', {
                             page: {

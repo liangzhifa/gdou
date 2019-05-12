@@ -8,7 +8,11 @@ import com.zhifa.gdou.mapper.TeacherMapper;
 import com.zhifa.gdou.model.StudentInfo;
 import com.zhifa.gdou.model.Teacher;
 import com.zhifa.gdou.resultEntity.ResultStatus;
+import org.apache.commons.codec.digest.Md5Crypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +26,9 @@ import java.util.Map;
 @ResponseBody
 public class WxStudentLogin {
 
+
+    private static final Logger loger = LoggerFactory.getLogger(WxStudentLogin.class);
+
     @Autowired
     private StudentInfoMapper studentInfoMapper;
 
@@ -32,6 +39,8 @@ public class WxStudentLogin {
     public Object student_login(@RequestParam("studentNum") String studentNum,
                                 @RequestParam("studentPass") String studentPass,
                                 HttpSession session){
+        studentPass = DigestUtils.md5DigestAsHex(studentPass.getBytes());
+        loger.info("登录密码：{}",studentPass);
         WxWebUser wxWebUser = WxWebUtils.getWxWebUserFromSession();
         StudentInfo studentInfo = studentInfoMapper.selectByStudentNumAndStudentPass(studentNum, studentPass);
         Teacher teacher = teacherMapper.selectByNameAndPass(studentNum, studentPass);

@@ -33,4 +33,8 @@ public interface TeacherMapper {
 
 
     int updateOpenIdByOpenId(@Param("openId") String openId);
+
+
+    //根据教师id  找到名称
+    String selectTeacherNameByNo(@Param("tNo") String tNo);
 }

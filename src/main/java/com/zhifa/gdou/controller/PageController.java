@@ -55,4 +55,15 @@ public class PageController {
     }
 
 
+
+    @RequestMapping("/class_info")
+    public String toClass_info(){
+        return "class_info";
+    }
+
+
+    @RequestMapping("/student_info")
+    public String tostudent_info(){
+        return "student_info";
+    }
 }

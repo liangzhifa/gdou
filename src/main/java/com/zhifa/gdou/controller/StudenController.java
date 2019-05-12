@@ -2,21 +2,27 @@ package com.zhifa.gdou.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mxixm.fastboot.weixin.util.WxWebUtils;
 import com.mxixm.fastboot.weixin.web.WxWebUser;
 import com.zhifa.gdou.mapper.ClassInfoMapper;
 import com.zhifa.gdou.mapper.LeavingMessageMapper;
 import com.zhifa.gdou.mapper.ScoreSheetMapper;
 import com.zhifa.gdou.mapper.StudentInfoMapper;
+import com.zhifa.gdou.model.ClassInfo;
 import com.zhifa.gdou.model.LeavingMessage;
 import com.zhifa.gdou.model.ScoreSheet;
 import com.zhifa.gdou.model.StudentInfo;
+import com.zhifa.gdou.resultEntity.LayUIDataGrid;
 import com.zhifa.gdou.resultEntity.RankingDTO;
 import com.zhifa.gdou.resultEntity.ScoreVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +33,9 @@ import java.util.*;
 
 @RestController
 public class StudenController {
+
+    private static final Logger loger = LoggerFactory.getLogger(StudenController.class);
+
 
     @Autowired
     private StudentInfoMapper studentInfoMapper;
@@ -238,7 +247,79 @@ public class StudenController {
 
 
 
+    //后台管理页面中的学生管理查询列表
+    @RequestMapping(value = "/student/findAllStudents")
+    public LayUIDataGrid findAllStudents(@RequestParam(value = "page",defaultValue = "1") Integer page,
+                                         @RequestParam(value = "limit",defaultValue = "80")Integer limit,
+                                         @RequestParam(value = "teacherName",defaultValue = "",required = false) String studentname){
+        PageHelper.startPage(page,limit);//分页插件
+        studentname="%"+studentname+"%";
+        List<StudentInfo> studentInfos = studentInfoMapper.findAllStudents(studentname);
+        PageInfo<StudentInfo> info=new PageInfo<>(studentInfos);
+        long total = info.getTotal();
+        List<StudentInfo> list = info.getList();
+        for (int i = 0; i < list.size(); i++) {
+            StudentInfo studentInfo = list.get(i);
+            String className=classInfoMapper.selcetClassNameByStuNo(studentInfo.getStudentnum());
+            studentInfo.setClassName(className);
+        }
+        return LayUIDataGrid.ReturnDataGrid(total,list);
+    }
 
 
+    @RequestMapping("/student/insertStudent")
+    public Object insertTeacherInfo(StudentInfo studentInfo){
+        Map<String,Object> map=new HashMap<>();
+        studentInfo.setStudentpass(DigestUtils.md5DigestAsHex(studentInfo.getStudentpass().getBytes()));
+        int insert = studentInfoMapper.insert(studentInfo);
+        if (insert>0){
+            map.put("code", 0);
+            map.put("msg","添加成功！");
+            return map;
+        }
+        map.put("code", 1);
+        map.put("msg","失败！请重试。");
+        return map;
+    }
+
+
+    @RequestMapping("/student/deleteById")
+    @Transactional
+    public Object deleteById(Integer id){
+        StudentInfo studentInfo = studentInfoMapper.selectByPrimaryKey(id);
+        int n=studentInfoMapper.deleteByPrimaryKey(id);
+        Map<String,Object> map=new HashMap<>();
+        if (n>0){
+            classInfoMapper.deleteClassInfoByStuNo(studentInfo.getStudentnum());
+            map.put("status",true);
+            return map;
+        }
+        map.put("status",false);
+        map.put("msg","删除失败，请重试！");
+        return map;
+    }
+
+    @RequestMapping("/student/web/modify")
+    @Transactional
+    public Object modify(String studentpass,String className,Integer id){
+        Map<String,Object> map=new HashMap<>();
+        studentpass = DigestUtils.md5DigestAsHex(studentpass.getBytes());
+        StudentInfo studentInfo = studentInfoMapper.selectByPrimaryKey(id);
+        studentInfo.setStudentpass(studentpass);
+        loger.info("修改登录密码：{}",studentpass);
+        studentInfoMapper.updateByPrimaryKeySelective(studentInfo);
+        String stuNo = classInfoMapper.selcetClassNameByStuNo(studentInfo.getStudentnum());
+        if (StringUtils.isEmpty(stuNo)){
+            ClassInfo classInfo = classInfoMapper.findClassByClassName(className);
+            classInfo.setId(null);
+            classInfo.setStudentnum(studentInfo.getStudentnum());
+            classInfoMapper.insert(classInfo);
+        }else {
+            classInfoMapper.updateClassNameByStuNo(className, studentInfo.getStudentnum());
+        }
+        map.put("code", 0);
+        map.put("msg","成功！");
+        return map;
+    }
 
 }

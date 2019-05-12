@@ -29,6 +29,14 @@
       SELECT  studentName FROM student_info
       WHERE studentNum=#{studentNum}
     </select>
+    <select id="findAllStudents" resultType="com.zhifa.gdou.model.StudentInfo">
+      select * from student_info
+      <where>
+        <if test="studentname !=null and studentname != ''">
+          and studentName like #{studentname}
+        </if>
+      </where>
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from student_info
     where id = #{id,jdbcType=INTEGER}

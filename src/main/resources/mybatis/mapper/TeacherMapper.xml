@@ -131,4 +131,7 @@
   <select id="selectByOpenId" resultType="com.zhifa.gdou.model.Teacher">
     SELECT * FROM teacher  WHERE openId=#{openId}
   </select>
+    <select id="selectTeacherNameByNo" resultType="java.lang.String">
+      SELECT DISTINCT teacher_name FROM teacher WHERE teacher_num=#{tNo}
+    </select>
 </mapper>
