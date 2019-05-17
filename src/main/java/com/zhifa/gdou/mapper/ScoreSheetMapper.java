@@ -71,6 +71,8 @@ public interface ScoreSheetMapper {
 
     /*获取所有课程*/
     List<String> getCourseAll(@Param("studentnum") String studentnum);
+
+
     String getCourseAllLimit1(@Param("studentnum") String studentnum);
 
 
@@ -84,5 +86,25 @@ public interface ScoreSheetMapper {
      */
 
     List<RankingDTO> getRanking(@Param("studentnum") String studentnum, @Param("testTime") Date  testTime);
+
+    /**
+     * cha查看单科排名
+     * @param studentnum
+     * @param testTime
+     * @param course
+     * @return
+     */
+    List<RankingDTO> getSingleRanking(@Param("studentnum") String studentnum, @Param("testTime") Date  testTime, @Param("course") String course);
+
+    /**
+     * 判断成绩是否已经导入
+     * @param scoreSheet
+     * @return
+     */
+    ScoreSheet isExiteScore(ScoreSheet scoreSheet);
+
+
+    List<RankingDTO> getAllGradeRanking(@Param("testTime") Date  testTime);
+
 
 }

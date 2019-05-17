@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- head 中 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="https://gw.alipayobjects.com/os/rmsportal/YmDAMEQVbLJpVbKiRQVX.css"/>
+    <style type="text/css">
+        html, body {
+            height: 100%;
+        }
+    </style>
+    <title>图像识别结果</title>
+
+
+</head>
+<body>
+<div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide"><img id="img"  alt=""></div>
+    </div>
+</div>
+<br>
+<div class="chart-wrapper"  >
+    <canvas id="mountNode"></canvas>
+</div>
+
+
+</body>
+<!-- body 最后 -->
+<script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-weui/1.2.1/js/jquery-weui.min.js"></script>
+<!-- 如果使用了某些拓展插件还需要额外的JS -->
+<script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/swiper.min.js"></script>
+<script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/city-picker.min.js"></script>
+
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/f2/3.3.8/f2-all.min.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/lib/lodash-4.17.4.min.js"></script>
+<!-- 在 PC 上模拟 touch 事件 -->
+<script src="https://gw.alipayobjects.com/os/rmsportal/NjNldKHIVQRozfbAOJUW.js"></script>
+<script>
+
+    $(document).ready(function(){
+
+       $.ajax({
+            url:"/wx/imageRes",
+            success:function(result){
+                console.log(result)
+                images(result.data)
+            }
+        });
+       images()
+    });
+    function images(data) {
+        var chart = new F2.Chart({
+            id: 'mountNode',
+            pixelRatio: window.devicePixelRatio
+        });
+        chart.source(data);
+        chart.coord('polar', {
+            transposed: true,
+            radius: 0.9,
+            innerRadius: 0.5
+        });
+        chart.axis(false);
+        chart.legend(false);
+        chart.tooltip(false);
+        chart.guide().html({
+            position: ['50%', '50%'],
+            html: '<div style="text-align: center;width:150px;height: 50px;">\n      <p style="font-size: 12px;color: #999;margin: 0" id="title"></p>\n      <p style="font-size: 18px;color: #343434;margin: 0;font-weight: bold;" id="money"></p>\n      </div>'
+        });
+        chart.interval().position('const*money').adjust('stack').color('type', ['#1890FF', '#13C2C2', '#2FC25B', '#FACC14', '#F04864', '#8543E0']);
+        chart.pieLabel({
+            sidePadding: 30,
+            activeShape: true,
+            label1: function label1(data) {
+                return {
+                    text: '相似度' + data.money,
+                    fill: '#343434',
+                    fontWeight: 'bold'
+                };
+            },
+            label2: function label2(data) {
+                return {
+                    text: data.type,
+                    fill: '#999'
+                };
+            },
+            onClick: function onClick(ev) {
+                var data = ev.data;
+                if (data) {
+                    $('#title').text(data.type);
+                    $('#money').text(data.money);
+                }
+            }
+        });
+        chart.render();
+
+    }
+</script>
+
+</html>
+

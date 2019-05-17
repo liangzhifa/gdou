@@ -13,6 +13,7 @@ import com.zhifa.gdou.model.Teacher;
 import com.zhifa.gdou.resultEntity.LayUIDataGrid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
@@ -160,11 +161,17 @@ public class ClassInfoController {
 
 
     @RequestMapping("/classInfo/modify")
+    @Transactional
     public Object modify(String className,Integer classNum,Integer id){
         ClassInfo classInfo = classInfoMapper.selectByPrimaryKey(id);
-        classInfo.setClassName(className);
+        String oldName = classInfo.getClassName();
+        Integer oldNum = classInfo.getClassNum();
+
+        classInfoMapper.updateInfoByclassName(className, oldName);
+        classInfoMapper.updateInfoByclassNum(classNum, oldNum);
+       /* classInfo.setClassName(className);
         classInfo.setClassNum(classNum);
-        int i = classInfoMapper.updateByPrimaryKeySelective(classInfo);
+        int i = classInfoMapper.updateByPrimaryKeySelective(classInfo);*/
         Map<String,Object> map=new HashMap<>();
         map.put("code", 0);
         map.put("msg","成功！");

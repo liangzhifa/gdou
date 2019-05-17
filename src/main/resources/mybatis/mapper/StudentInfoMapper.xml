@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhifa.gdou.mapper.StudentInfoMapper" >
+
+  <!-- 开启二级缓存 -->
+  <cache/>
+
   <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.StudentInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="studentName" property="studentname" jdbcType="VARCHAR" />
@@ -36,6 +40,11 @@
           and studentName like #{studentname}
         </if>
       </where>
+    </select>
+    <select id="findOpenIdByStuNo" resultType="java.lang.String">
+       select openId from student_info
+        where studentNum = #{studentNum}
+
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from student_info

@@ -32,12 +32,12 @@
         <div class="layui-form-item center" >
             <label class="layui-form-label" >班级编号</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="classNum" required placeholder="请输入班级编号" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" name="classNum" lay-verify="required" placeholder="请输入班级编号" autocomplete="off" class="layui-input">
             </div>
             <br>
             <label class="layui-form-label" >班级名称</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="className" required placeholder="请输入班级名称" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" name="className" lay-verify="required" placeholder="请输入班级名称" autocomplete="off" class="layui-input">
             </div>
             <br>
 
@@ -56,13 +56,13 @@
         <div class="layui-form-item center" >
             <label class="layui-form-label" >班级编号：</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" required placeholder="班级编号：" autocomplete="off"  name="classNum" class="layui-input">
+                <input type="text" style="width: 320px;" lay-verify="required"  placeholder="班级编号：" autocomplete="off" id="newClassNum" name="classNum" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item center" >
             <label class="layui-form-label" >班级名称：</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="className" required placeholder="班级名称：" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" id="newClassName" name="className" lay-verify="required"  placeholder="班级名称：" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -215,6 +215,9 @@
                 //layer.msg('编辑操作');
                 modifyData=data;
                 $("#teachNo").val(data.teacherName);
+                $("#newClassName").val(data.className);
+                $("#newClassNum").val(data.classNum);
+
                 modifyVar=layer.open({
                     type: 1,
                     title:"修改信息",

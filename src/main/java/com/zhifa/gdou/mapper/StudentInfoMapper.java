@@ -29,4 +29,6 @@ public interface StudentInfoMapper {
 
     List<StudentInfo> findAllStudents(@Param("studentname") String studentname);
 
+    String findOpenIdByStuNo(@Param("studentNum") String studentNum);
+
 }

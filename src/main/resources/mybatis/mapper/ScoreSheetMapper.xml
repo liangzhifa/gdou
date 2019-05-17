@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhifa.gdou.mapper.ScoreSheetMapper">
+
+    <!-- 开启二级缓存 -->
+    <cache/>
+
     <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.ScoreSheet">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="studentNum" property="studentnum" jdbcType="VARCHAR"/>
@@ -166,13 +170,63 @@
      SELECT DISTINCT course  from score_sheet WHERE studentNum=#{studentnum} GROUP BY course limit 1
   </select>
     <select id="getRanking" resultType="com.zhifa.gdou.resultEntity.RankingDTO">
-    SELECT (@i:=@i+1) as ranking,res.* from
-    (SELECT  ss.studentNum, SUM(score) as total FROM score_sheet as ss
+  SELECT (@i:=@i+1) as ranking,zz.* from
+(SELECT res.studentNum,res.total,scs.yuwen,scs.shuxue,scs.yingyu FROM
+(SELECT  ss.studentNum, SUM(score) as total FROM score_sheet as ss
         WHERE  ss.test_time=#{testTime}
             AND  ss.studentNum in
+            (SELECT ci.studentNum FROM class_info as ci WHERE ci.class_name=(SELECT DISTINCT class_name FROM class_info WHERE studentNum=#{studentnum}  LIMIT 1))
+              GROUP BY ss.studentNum
+) as res,(SELECT studentNum,
+MAX(CASE course WHEN '语文' THEN score ELSE 0 END) yuwen ,
+MAX(CASE course WHEN '数学' THEN score ELSE 0 END) shuxue ,
+MAX(CASE course WHEN '英语' THEN score ELSE 0 END) yingyu ,
+MAX(CASE course WHEN '化学' THEN score ELSE 0 END) huaxue ,
+MAX(CASE course WHEN '物理' THEN score ELSE 0 END) wuli ,
+MAX(CASE course WHEN '生物' THEN score ELSE 0 END) shengwu
+from score_sheet
+WHERE test_time=#{testTime} and studentNum in
             (SELECT ci.studentNum FROM class_info as ci WHERE ci.class_name=(SELECT DISTINCT class_name FROM class_info WHERE studentNum=#{studentnum} LIMIT 1))
-             GROUP BY ss.studentNum ORDER BY total desc
+GROUP BY studentNum ) as scs WHERE res.studentNum=scs.studentNum ORDER BY total desc, yuwen DESC,shuxue DESC ,yingyu DESC )
+as zz
+,(select  @i:=0) as i
+    </select>
+    <select id="getSingleRanking" resultType="com.zhifa.gdou.resultEntity.RankingDTO">
+         SELECT (@i:=@i+1) as ranking,res.* from
+    (SELECT  studentNum,score as total  FROM score_sheet as ss
+        WHERE  ss.test_time=#{testTime} and ss.course=#{course}
+            AND  ss.studentNum in
+            (SELECT ci.studentNum FROM class_info as ci WHERE ci.class_name=(SELECT DISTINCT class_name FROM class_info WHERE studentNum=#{studentnum} LIMIT 1))
+		  ORDER BY score desc
     ) as res,(select  @i:=0) as i
+    </select>
+    <select id="isExiteScore" resultType="com.zhifa.gdou.model.ScoreSheet">
+        SELECT * FROM score_sheet WHERE studentNum=#{studentnum} and course=#{course} and test_time=#{testTime}
+    </select>
+    <select id="getAllGradeRanking" resultType="com.zhifa.gdou.resultEntity.RankingDTO">
+        SELECT (@i:=@i+1) as ranking,zz.* from
+(SELECT res.studentNum,res.total,scs.yuwen,scs.shuxue,scs.yingyu FROM
+(SELECT  ss.studentNum, SUM(score) as total FROM score_sheet as ss
+        WHERE  ss.test_time=#{testTime}
+            AND  ss.studentNum in
+            (SELECT DISTINCT studentNum FROM score_sheet GROUP BY studentNum )
+              GROUP BY ss.studentNum
+) as res,(SELECT studentNum,
+MAX(CASE course WHEN '语文' THEN score ELSE 0 END) yuwen ,
+MAX(CASE course WHEN '数学' THEN score ELSE 0 END) shuxue ,
+MAX(CASE course WHEN '英语' THEN score ELSE 0 END) yingyu ,
+MAX(CASE course WHEN '化学' THEN score ELSE 0 END) huaxue ,
+MAX(CASE course WHEN '物理' THEN score ELSE 0 END) wuli ,
+MAX(CASE course WHEN '生物' THEN score ELSE 0 END) shengwu
+from score_sheet
+WHERE test_time=#{testTime} and studentNum in
+            (SELECT DISTINCT studentNum FROM score_sheet GROUP BY studentNum )
+GROUP BY studentNum ) as scs WHERE res.studentNum=scs.studentNum ORDER BY total desc, yuwen DESC,shuxue DESC ,yingyu DESC )
+as zz
+,(select  @i:=0) as i
+
+
+
     </select>
 
 </mapper>

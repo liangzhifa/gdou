@@ -48,4 +48,22 @@ public interface ClassInfoMapper {
     int deleteByClassName(@Param("className") String className);
 
     int deleteClassInfoByStuNo(@Param("studentnum") String studentnum);
+    /**
+     * 判断这个学生是否该老师下面的
+     */
+    ClassInfo getClassInfoByStudentnumAndHeadMasterNum(@Param("studentnum") String studentnum,@Param("headMasterNum") String headMasterNum);
+
+    /**
+     * 清空原来的班主任信息
+     * @param headMasterNum
+     * @return
+     */
+    int updateHead_Tescher(@Param("headMasterNum") String headMasterNum);
+
+    /**
+     * xiugai 修改班级信息
+     */
+    int updateInfoByclassName(@Param("className") String className,@Param("oldName") String oldName);
+    int updateInfoByclassNum(@Param("classNum") Integer classNum, @Param("oldNum") Integer oldNum);
+
 }

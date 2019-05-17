@@ -10,6 +10,7 @@ import com.zhifa.gdou.service.TeacherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,6 +97,9 @@ public class TeacherController {
         teacher.setTeacherName(teacherName);
         String teacherNumAndPass="gdou"+teacherName.hashCode();
         teacher.setTeacherNum(teacherNumAndPass);
+        if (ObjectUtils.isEmpty(teacherPassword)){
+            teacherPassword=teacherNumAndPass;
+        }
         teacher.setTeacherPassword(DigestUtils.md5DigestAsHex(teacherPassword.getBytes()));
         teacher.setState(Byte.valueOf("1"));
         int insert = teacherMapper.insert(teacher);
@@ -110,6 +114,7 @@ public class TeacherController {
         return map;
     }
     @RequestMapping("/modify")
+    @Transactional
     public Object modify(String className,String teacherPassword,String teacherNum,Integer id){
         Map<String,Object> map=new HashMap<>();
         int i=0,j=0;
@@ -124,7 +129,8 @@ public class TeacherController {
             }
         }
         if (!ObjectUtils.isEmpty(className)){
-            j = classInfoMapper.updatehead_master_numByclass_name(className, teacherNum);
+            classInfoMapper.updateHead_Tescher(teacherNum);
+            classInfoMapper.updatehead_master_numByclass_name(className, teacherNum);
         }
         map.put("code", 0);
         map.put("msg","成功！");

@@ -63,4 +63,15 @@ public class ScoreSheet implements Serializable {
         this.score = score;
         this.testTime = testTime;
     }
+
+    @Override
+    public String toString() {
+        return "ScoreSheet{" +
+                "id=" + id +
+                ", studentnum='" + studentnum + '\'' +
+                ", course='" + course + '\'' +
+                ", score=" + score +
+                ", testTime=" + testTime +
+                '}';
+    }
 }

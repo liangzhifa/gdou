@@ -2,7 +2,7 @@ package com.zhifa.gdou.model;
 
 import java.io.Serializable;
 
-public class StudentInfo implements Serializable {
+public class StudentInfo extends StudentInfoDetail implements Serializable{
     private Integer id;
 
     private String studentname;
@@ -12,7 +12,6 @@ public class StudentInfo implements Serializable {
     private String studentpass;
 
     private String openid;
-
 
     private String className;
 

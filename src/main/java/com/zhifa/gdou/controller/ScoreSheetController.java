@@ -2,9 +2,14 @@ package com.zhifa.gdou.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mxixm.fastboot.weixin.module.message.WxMessage;
+import com.mxixm.fastboot.weixin.module.message.WxMessageBody;
+import com.mxixm.fastboot.weixin.module.message.WxMessageTemplate;
+import com.mxixm.fastboot.weixin.module.message.WxUserMessage;
 import com.zhifa.gdou.mapper.ClassInfoMapper;
 import com.zhifa.gdou.mapper.ScoreSheetMapper;
 import com.zhifa.gdou.mapper.StudentInfoMapper;
+import com.zhifa.gdou.model.ClassInfo;
 import com.zhifa.gdou.model.ScoreSheet;
 import com.zhifa.gdou.model.Teacher;
 import com.zhifa.gdou.resultEntity.LayUIDataGrid;
@@ -15,11 +20,16 @@ import com.zhifa.gdou.utils.ScoreUtil;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +39,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+/**
+ * @Author: zhifa
+ * @Date: 2019/5/16
+ * @Description: 主要用于教师对学生成绩的录入
+ */
 @RestController
 public class ScoreSheetController {
+
+    private static final Logger loger = LoggerFactory.getLogger(ScoreSheetController.class);
+
+
+
+    @Autowired
+    private WxMessageTemplate wxMessageTemplate;
+
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -49,7 +72,7 @@ public class ScoreSheetController {
     private ClassInfoMapper classInfoMapper;
 
     /**
-     * 上传Excel 录入成绩
+     * 上传Excel 录入成绩  成绩录入成功后异步通知微信发送消息
      * @param excel
      * @param request
      * @param response
@@ -87,35 +110,45 @@ public class ScoreSheetController {
                 for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 
                     String stuNum = sheet.getRow(i).getCell(0).toString();
+                    /**
+                     * 过滤不是该老师的学生
+                     */
+                    ClassInfo info = classInfoMapper.getClassInfoByStudentnumAndHeadMasterNum(stuNum, teacher.getTeacherNum());
+                    if (ObjectUtils.isEmpty(info)){
+                        loger.info("过滤不是这个老师下面的学生: {}",stuNum);
+                        continue;
+                    }
                     String stuName=sheet.getRow(i).getCell(1).toString();
                     Date testTime = sheet.getRow(i).getCell(2).getDateCellValue();
+
+
                     HSSFCell key1 = ExcelUtil.getHSSFCell(sheet, 0, 3);
                     if (key1!=null){
                         String k1  = key1.toString();
                         double v1 = ExcelUtil.getHSSFCell(sheet, i, 3).getNumericCellValue();
                         ScoreSheet scoreSheet=new ScoreSheet(stuNum,k1,(int) v1,testTime);
-                        scoreSheetMapper.insert(scoreSheet);
+                        excuteInsertScore(scoreSheet);
                     }
                     HSSFCell key2 = ExcelUtil.getHSSFCell(sheet, 0, 4);
                     if (key2!=null){
                         String k1  = key2.toString();
                         double v1 = ExcelUtil.getHSSFCell(sheet, i, 4).getNumericCellValue();
                         ScoreSheet scoreSheet=new ScoreSheet(stuNum,k1,(int) v1,testTime);
-                        scoreSheetMapper.insert(scoreSheet);
+                        excuteInsertScore(scoreSheet);
                     }
                     HSSFCell key3 = ExcelUtil.getHSSFCell(sheet, 0, 5);
                     if (key3!=null){
                         String k1  = key3.toString();
                         double v1 = ExcelUtil.getHSSFCell(sheet, i, 5).getNumericCellValue();
                         ScoreSheet scoreSheet=new ScoreSheet(stuNum,k1,(int) v1,testTime);
-                        scoreSheetMapper.insert(scoreSheet);
+                        excuteInsertScore(scoreSheet);
                     }
                     HSSFCell key4 = ExcelUtil.getHSSFCell(sheet, 0, 6);
                     if (key4!=null){
                         String k1  = key4.toString();
                         double v1 = ExcelUtil.getHSSFCell(sheet, i, 6).getNumericCellValue();
                         ScoreSheet scoreSheet=new ScoreSheet(stuNum,k1,(int) v1,testTime);
-                        scoreSheetMapper.insert(scoreSheet);
+                        excuteInsertScore(scoreSheet);
                     }
                     HSSFCell key5 = ExcelUtil.getHSSFCell(sheet, 0, 7);
                     if (key3!=null){
@@ -123,15 +156,35 @@ public class ScoreSheetController {
                         double v1 = ExcelUtil.getHSSFCell(sheet, i, 7).getNumericCellValue();
 
                         ScoreSheet scoreSheet=new ScoreSheet(stuNum,k1, (int) v1,testTime);
-                        scoreSheetMapper.insert(scoreSheet);
+                        excuteInsertScore(scoreSheet);
                     }
                     HSSFCell key6 = ExcelUtil.getHSSFCell(sheet, 0, 8);
                     if (key3!=null){
                         String k1  = key6.toString();
                         double v1 = ExcelUtil.getHSSFCell(sheet, i, 8).getNumericCellValue();
                         ScoreSheet scoreSheet=new ScoreSheet(stuNum,k1,(int) v1,testTime);
-                        scoreSheetMapper.insert(scoreSheet);
+                        excuteInsertScore(scoreSheet);
                     }
+
+                    /**
+                     * 发送微信通知
+                     */
+
+                    try {
+                        String openId = studentInfoMapper.findOpenIdByStuNo(stuNum);
+                        if (!ObjectUtils.isEmpty(openId)){
+                            WxUserMessage build = WxMessage.newsBuilder()
+                                    .addItem(WxMessageBody.News.Item.builder().title("最新成绩出来啦").description("点击查看")
+                                            .picUrl("http://mmbiz.qpic.cn/mmbiz_jpg/BXa2ick0Zc8mhZBGSicbe5xd8q1vbESAWOjjOKw4icggiaZlIUP0Woj8FibWHp8yeVLvCJbwg46BfQLCPUlf8WeCib4g/0")
+                                            .url("/wx/main").build())
+                                    .build();
+                            wxMessageTemplate.sendMessage(openId,build);  //setToUser("ovwMI59y1dfGKq2kJ9yDn96-kUPM");
+                        }
+                        loger.info("成绩推送到 学号为 {},名字： {}",stuNum,stuName);
+                    } catch (Exception e) {
+                        loger.info("推送失败 {}",e.getMessage());
+                    }
+
 
                 }
                 System.out.println("============上传完毕===========");
@@ -147,6 +200,22 @@ public class ScoreSheetController {
         return map;
     }
 
+
+    private boolean isNotExiteScore(ScoreSheet scoreSheet){
+        ScoreSheet exiteScore = scoreSheetMapper.isExiteScore(scoreSheet);
+        if (ObjectUtils.isEmpty(exiteScore)){
+            return true;
+        }
+        return false;
+    }
+
+    private void excuteInsertScore(ScoreSheet scoreSheet){
+        if (isNotExiteScore(scoreSheet)){
+            scoreSheetMapper.insert(scoreSheet);
+        }else {
+            loger.info("成绩信息已经存在  {}",scoreSheet);
+        }
+    }
 
     /**
      * 添加学生成绩

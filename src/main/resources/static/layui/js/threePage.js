@@ -36,15 +36,18 @@ $(document).ready(function(){
 
         }
     });
-});
 
-function dotab3(){
     /*获取该学生所有的课程*/
     $.getJSON('/wx/getCourseAll', function(res) {
         for (var i=0;i<res.length;i++){
             testCourse.push(res[i])
         }
     });
+
+});
+
+function dotab3(){
+
     /*查询该学生历年的单科成绩*/
     $.getJSON('/wx/getScoreByCourse', function(result) {
         console.log(JSON.stringify(result))

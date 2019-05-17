@@ -1,5 +1,8 @@
 package com.zhifa.gdou.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.baidu.aip.ocr.AipOcr;
 import com.mxixm.fastboot.weixin.annotation.WxAsyncMessage;
 import com.mxixm.fastboot.weixin.annotation.WxButton;
 import com.mxixm.fastboot.weixin.annotation.WxEventMapping;
@@ -11,21 +14,37 @@ import com.mxixm.fastboot.weixin.module.user.WxUser;
 import com.mxixm.fastboot.weixin.module.web.WxRequest;
 import com.mxixm.fastboot.weixin.module.web.WxRequestBody;
 import com.mxixm.fastboot.weixin.module.web.session.WxSession;
+import com.zhifa.gdou.config.baidu.TransApi;
 import com.zhifa.gdou.mapper.StudentInfoMapper;
 import com.zhifa.gdou.mapper.TeacherMapper;
+import com.zhifa.gdou.mapper.WxImageInfoMapper;
 import com.zhifa.gdou.mapper.WxUserAttentionMapper;
+import com.zhifa.gdou.model.WxImageInfo;
 import com.zhifa.gdou.model.WxUserAttention;
+import com.zhifa.gdou.utils.ImagesUtils;
 import com.zhifa.gdou.utils.WxBeanUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ObjectUtils;
+
+import java.util.Date;
+import java.util.HashMap;
 
 
 @com.mxixm.fastboot.weixin.annotation.WxController
 public class WxMenuController {
 
+    @Autowired
+    private WxImageInfoMapper wxImageInfoMapper;
+
+
+
     private static Logger log = LoggerFactory.getLogger(WxMenuController.class);
+
+    @Value("${wx.callback-url}")
+    private String serverUrl;
 
     @Autowired
     private WxUserAttentionMapper wxUserAttentionMapper;
@@ -35,6 +54,11 @@ public class WxMenuController {
 
     @Autowired
     private TeacherMapper teacherMapper;
+
+    @Autowired
+    private AipOcr aipOcr ;
+    @Autowired
+    private TransApi transApi ;
 
     /**
      * 定义微信菜单
@@ -56,23 +80,8 @@ public class WxMenuController {
     public void right() {
     }
 
-    /**
-     * 定义微信菜单，并接受事件
-     */
- /*   @WxButton(type = WxButton.Type.CLICK,
-            group = WxButton.Group.LEFT,
-            order = WxButton.Order.FIRST,
-            name = "消息tips")
-    public String leftFirst(WxRequest wxRequest, WxUser wxUser) {
-        //log.info("wxRequest=>{}",wxRequest);
-        log.info("wxUser=>{}",wxUser);
-      *//*  WxUserAttention wxUserAttention = WxBeanUtil.WxUserToWxUserAttention(wxUser);
-        int insert = wxUserAttentionMapper.insert(wxUserAttention);*//*
-        return wxUser.getNickName()+"  你好啊！/:rose \n"
-                                +"家长留言格式(#内容)\n"
-                                +"教师群发家庭作业($内容)";
-    }*/
-    /**
+
+    /**清除登录
      * 定义微信菜单，并接受事件
      */
     @WxButton(type = WxButton.Type.CLICK,
@@ -97,7 +106,7 @@ public class WxMenuController {
         return "账号信息清除失败(或者没绑定)";
     }
 
-    /**
+    /**学生相关
      * 定义微信菜单，并接受事件
      */
     @WxButton(type = WxButton.Type.VIEW,
@@ -107,14 +116,23 @@ public class WxMenuController {
             name = "学生相关")
     @WxAsyncMessage
     public void link(WxRequest wxRequest) {
-
-/*
-        wxRequest.
-        session.setAttribute("wxUser",wxUser);
-*/
-        //System.out.println();
-        //return WxMessage.newsBuilder().addItem("测试图文消息", "测试", "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white.png", "http://baidu.com").build();
     }
+
+    /**图像识别
+     * 定义微信菜单，并接受事件
+     */
+    @WxButton(type = WxButton.Type.PIC_PHOTO_OR_ALBUM,
+            group = WxButton.Group.MIDDLE,
+            order = WxButton.Order.FIRST,
+            name = "图像识别")
+    @WxAsyncMessage
+    public void PIC_PHOTO_OR_ALBUM(WxRequest wxRequest) {
+      //  WxRequest.Body body = wxRequest.getBody();
+
+    }
+
+
+
     @WxButton(type =WxButton.Type.VIEW,
             group = WxButton.Group.MIDDLE,
             order = WxButton.Order.FIFTH,
@@ -161,15 +179,11 @@ public class WxMenuController {
         return "非常感谢 "+wxUser.getNickName() + "   /:rose";
     }
 
-    /**
-     * 接受用户文本消息，异步返回文本消息
-     * @param content
-     * @return the result
-     */
-    @WxMessageMapping(type = WxMessage.Type.TEXT)
+
+    @WxMessageMapping(type = WxMessage.Type.TEXT,wildcard = "**")
     @WxAsyncMessage
     public String text(WxRequest wxRequest, String content) {
-        log.info("wxRequest==>{}",wxRequest);
+        log.info("调用了 text WxMessage.Type.TEXT wxRequest==>{}",wxRequest);
         WxSession wxSession = wxRequest.getWxSession();
         if (wxSession != null && wxSession.getAttribute("last") != null) {
             wxSession.setAttribute("last", content);
@@ -179,44 +193,44 @@ public class WxMenuController {
         return  content;
     }
 
-/*    *//**
-     * 接受用户文本消息，同步返回图文消息
-     * @param content
+
+    /**
+     * 接受用户图片消息，异步返回文本消息
+     * @param
      * @return the result
-     *//*
-    @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "1*")
-    public WxMessage message(WxSession wxSession, String content) {
-        wxSession.setAttribute("last", content);
-        return WxMessage.newsBuilder()
-                .addItem(WxMessageBody.News.Item.builder().title(content).description("随便一点")
-                        .picUrl("http://k2.jsqq.net/uploads/allimg/1702/7_170225142233_1.png")
-                        .url("http://baidu.com").build())
-                .build();
+     */
+    @WxMessageMapping(type = WxMessage.Type.IMAGE)
+    public String image(WxRequest wxRequest, WxRequestBody.Image image,String content) {
+        WxRequest.Body body = wxRequest.getBody();
+        String picUrl = image.getPicUrl();
+        String openId = wxRequest.getOpenId();
+        log.info("调用了image WxMessage.Type.IMAGE => openId={}  getPicUrl={}",openId,picUrl);
+        if (ObjectUtils.isEmpty(picUrl)){
+            return content;
+        }
+        WxImageInfo wxImageInfo = new WxImageInfo(openId,picUrl,new Date());
+        wxImageInfoMapper.insert(wxImageInfo);
+        // 通用文字识别, 图片参数为远程url图片
+        byte[] fileStream = ImagesUtils.getFileStream(picUrl);
+        //JSONObject resJson = JSONObject.parseObject(aipOcr.basicAccurateGeneral(fileStream, new HashMap<String, String>()).toString(2));
+       /* return WxMessage.newsBuilder()
+                .addItem(WxMessageBody.News.Item.builder().title("图像识别结果").description("点击查看")
+                        .picUrl(picUrl)
+                        .url(serverUrl+"/wx/imagesRes").build())
+                .build();*/
+        com.alibaba.fastjson.JSONObject resJson = JSONObject.parseObject(aipOcr.basicAccurateGeneral(fileStream, new HashMap<String, String>()).toString(2));
+        JSONArray words_results = resJson.getJSONArray("words_result");
+        StringBuffer bf = new StringBuffer();
+
+        for (int i = 0; i < words_results.size(); i++) {
+            bf.append(words_results.getJSONObject(i).getString("words"));
+        }
+        log.info("完成读取图片文字={}",bf.toString());
+        JSONObject stranslate = JSONObject.parseObject(transApi.getTransResult(bf.toString(), "auto", "en"));
+        String stranslateRes = stranslate.getJSONArray("trans_result").getJSONObject(0).getString("dst");
+        log.info("完成翻译= {}",stranslateRes);
+        return  stranslateRes;
     }
 
-    *//**
-     * 接受用户文本消息，异步返回文本消息
-     * @param content
-     * @return the result
-     *//*
-    @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "#*")
-    @WxAsyncMessage
-    public String text2(WxRequestBody.Text text, String content) {
-        boolean match = text.getContent().equals(content);
 
-        return "收到消息内容为" + content + "!结果匹配！" + match+"给班主任留言";
-    }
-    *//**
-     * 接受用户文本消息，异步返回文本消息
-     * @param content
-     * @return the result
-     *//*
-    @WxMessageMapping(type = WxMessage.Type.TEXT, wildcard = "$*")
-    @WxAsyncMessage
-    public String texttask(WxRequestBody.Text text, String content) {
-        boolean match = text.getContent().equals(content);
-
-        return "收到消息内容为" + content + "!结果匹配！" + match+"发布家庭作业";
-    }
-    */
 }

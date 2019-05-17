@@ -23,7 +23,7 @@ $(document).ready(function(){
             console.log(result.ranking.total);
 
             $("#total").html(result.ranking.total);
-            $("#ranking").html("你在的班级排名: "+result.ranking.ranking);
+            $("#ranking").html(result.ranking.ranking);
             map=result.map;
             data=result.data;
             data3=result.data3;
@@ -71,7 +71,7 @@ $("#score").picker({
                 scoreX4(data3);
                 scoreX2(data);
                 $("#total").html(result.ranking.total);
-                $("#ranking").html("你在的班级排名: "+result.ranking.ranking);
+                $("#ranking").html(result.ranking.ranking);
                 $.toptip('成功', 'success');
             }
         });

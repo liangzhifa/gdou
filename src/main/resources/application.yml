@@ -13,17 +13,41 @@ spring:
   jackson:
     date-format: yyyy-MM-dd
     time-zone: GMT+8
+  mail:
+    host: smtp.qq.com
+    username: 877657682@qq.com
+    password: vbgbyfcaehdhbfjg
+    default-encoding: utf-8
+
+
+
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations:
     - classpath:mybatis/mapper/*
+
 pagehelper:
   auto-dialect: mysql
 wx:
   appid: wx44e91599e99be24a
-  token: zhifa
   appsecret: eff5d9f3261d0b0b8337a77d2feae95c
+  #appid: wx711bfa08f2b1ec2a
+  #appsecret: 1188538bb4b08ba46ca71e8d1d7e1236
+  token: zhifa
   path: /zhifa
   callback-url: http://zhifa.natapp1.cc
   #callback-domain: http://fzft8c.natappfree.cc
-
+logging:
+  level:
+    com:
+     zhifa:
+      gdou:
+       mapper: debug
+baidu:
+  ZhitiShiBie:
+    APP_ID: 15972144
+    API_KEY: vNHEn1CRpBVk1RGmsww5zhKS
+    SECRET_KEY: 8eUyawQ7G1Zz6uqEiAYgt4xUWhvnPuRf
+  trans:
+    APP_ID: 20180425000150348
+    SECURITY_KEY: VOjnr0oI0e7_mqwe5nNq

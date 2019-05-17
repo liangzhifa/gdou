@@ -32,18 +32,34 @@
         <div class="layui-form-item center" >
             <label class="layui-form-label" >学生名字</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="studentname" required placeholder="请输入学生名字" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" name="studentname" lay-verify="required" placeholder="请输入学生名字" autocomplete="off" class="layui-input">
             </div>
             <br>
             <label class="layui-form-label" >学生学号</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="studentnum" required placeholder="请输入学生学号" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" name="studentnum" lay-verify="required" placeholder="请输入学生学号" autocomplete="off" class="layui-input">
             </div>
             <br>
             <label class="layui-form-label" >登录密码</label>
             <div class="layui-input-block">
-                <input type="text" style="width: 320px;" name="studentpass" required placeholder="请输入登录密码" autocomplete="off" class="layui-input">
+                <input type="text" style="width: 320px;" name="studentpass" lay-verify="required" placeholder="请输入登录密码" autocomplete="off" class="layui-input">
             </div>
+            <br>
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-block">
+                <input type="tel" style="width: 320px;" name="phone" lay-verify="required|phone" placeholder="请输入家长手机号码" autocomplete="off" class="layui-input">
+            </div>
+            <br>
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="email" lay-verify="email" placeholder="请输入邮箱地址" autocomplete="off" class="layui-input">
+            </div>
+            <br>
+            <label class="layui-form-label" >住址</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="address" lay-verify="required" placeholder="请输入家庭住址" autocomplete="off" class="layui-input">
+            </div>
+
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
@@ -71,6 +87,24 @@
             <label class="layui-form-label" >班级：</label>
             <div class="layui-input-block">
                 <select id="selectID" style="width: 320px;"  name="className" class="layui-input"></select>
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >手机：</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="phone" id="newPhone" lay-verify="phone" placeholder="新手机：" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >邮箱：</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="email" id="newEmail" lay-verify="email" placeholder="新邮箱：" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >住址：</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="address" required placeholder="新住址：" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -137,12 +171,14 @@
            /* ,toolbar:'default'*/
             ,title: '用户数据表'
             ,cols: [[
-                 {field:'id', title:'ID', width:80, fixed: 'left', unresize: true , align: 'center'}
-                ,{field:'studentname', title:'学生学号', width:150 , align: 'center' }
-                ,{field:'studentnum', title:'学生姓名', width:100  , align: 'center' }
-                ,{field:'className', title:'班级', width:130, align: 'center'}
-                ,{field:'studentpass', title:'登录密码', width:100, align: 'center'}
-                ,{field:'openid', title:'微信id',width:400, align: 'center'}
+                 {field:'id', title:'ID', width:50, fixed: 'left', unresize: true , align: 'center'}
+                ,{field:'studentname', title:'学生姓名', width:80 , align: 'center' }
+                ,{field:'studentnum', title:'学生学号', width:100  , align: 'center' }
+                ,{field:'className', title:'班级', width:100, align: 'center'}
+                ,{field:'phone', title:'手机', width:140, align: 'center'}
+                ,{field:'email', title:'邮箱', width:180, align: 'center'}
+                ,{field:'address', title:'家庭住址', width:160, align: 'center'}
+                ,{field:'openid', title:'微信id',width:300, align: 'center'}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:120 , align: 'center'}
             ]]
             ,page: true
@@ -162,7 +198,7 @@
                         title:"登记信息",
                         // closeBtn: true,
                         shift: 2,
-                        area: ['600px', '400px'],
+                        area: ['650px', '480px'],
                         shadeClose: true,
                         //btn: ['新增', '取消'],
                         // btnAlign: 'c',
@@ -226,12 +262,14 @@
                 //layer.msg('编辑操作');
                 modifyData=data;
                 $("#teachNo").val(data.studentname);
+                $("#newPhone").val(data.phone);
+                $("#newEmail").val(data.email);
                 modifyVar=layer.open({
                     type: 1,
                     title:"修改信息",
                     // closeBtn: true,
                     shift: 2,
-                    area: ['500px', '400px'],
+                    area: ['500px', '460px'],
                     shadeClose: true,
                     //btn: ['新增', '取消'],
                     // btnAlign: 'c',
@@ -292,6 +330,7 @@
         //监听提交
         form.on('submit(formDemo)', function(data){
             console.log(JSON.stringify(data.field));
+
             /*提交表单*/
             $.ajax({
                 url:'/student/insertStudent',
@@ -330,7 +369,11 @@
             $.ajax({
                 url:'/student/web/modify',
                 method:'post',
-                data:{studentpass:data.field.studentpass,className:data.field.className,id:modifyData.id},
+                data:{studentpass:data.field.studentpass,
+                    phone:data.field.phone,
+                    email:data.field.email,
+                    address:data.field.address,
+                    id:modifyData.id},
                 dataType:'JSON',
                 success:function(res){
                     console.log(res);

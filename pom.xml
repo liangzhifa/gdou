@@ -96,12 +96,7 @@
             <version>1.4.11.1</version>
         </dependency>
 
-        <!-- fastbootWeixin的核心依赖 -->
-        <dependency>
-            <groupId>com.mxixm</groupId>
-            <artifactId>fastboot-weixin</artifactId>
-            <version>0.6.2</version>
-        </dependency>
+
         <!-- 暂时只能使用apache的http，后续可加入其它http支持 -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -113,7 +108,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -121,11 +115,11 @@
         </dependency>
 
 
-      <!--  <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>-->
+        <!--  <dependency>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-devtools</artifactId>
+              <optional>true</optional>
+          </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -146,7 +140,27 @@
             <version>2.4</version>
         </dependency>
 
+        <!--百度云api-->
+        <dependency>
+            <groupId>com.baidu.aip</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>4.11.0</version>
+        </dependency>
 
+        <!-- 邮箱 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+
+        <!-- fastbootWeixin的核心依赖 -->
+        <dependency>
+            <groupId>com.mxixm</groupId>
+            <artifactId>fastboot-weixin</artifactId>
+           <!-- <version>0.7.0-SNAPSHOT</version>-->
+            <version>0.6.2</version>
+        </dependency>
 
 
     </dependencies>
@@ -180,19 +194,35 @@
 
     </build>
     <repositories><!-- 代码库 -->
-   <repository>
-      <id>maven-ali</id>
-      <url>http://maven.aliyun.com/nexus/content/groups/public//</url>
-      <releases>
-         <enabled>true</enabled>
-      </releases>
-      <snapshots>
-         <enabled>true</enabled>
-         <updatePolicy>always</updatePolicy>
-         <checksumPolicy>fail</checksumPolicy>
-      </snapshots>
-   </repository>
-</repositories>
+
+        <repository>
+            <id>maven-net-cn</id>
+            <name>Maven China Mirror</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/ ></url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+
+        <repository>
+            <id>maven-ali</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public//</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </repository>
+
+
+    </repositories>
 
 
 </project>
