@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zhifa.gdou.mapper.StudentInfoMapper" >
+<mapper namespace="com.zhifa.gdou.mapper.StudentInfoMapper">
 
-  <!-- 开启二级缓存 -->
-  <cache/>
+    <!-- 开启二级缓存 -->
+    <cache/>
 
-  <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.StudentInfo" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="studentName" property="studentname" jdbcType="VARCHAR" />
-    <result column="studentNum" property="studentnum" jdbcType="VARCHAR" />
-    <result column="studentPass" property="studentpass" jdbcType="VARCHAR" />
-    <result column="openId" property="openid" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+    <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.StudentInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="studentName" property="studentname" jdbcType="VARCHAR"/>
+        <result column="studentNum" property="studentnum" jdbcType="VARCHAR"/>
+        <result column="studentPass" property="studentpass" jdbcType="VARCHAR"/>
+        <result column="openId" property="openid" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, studentName, studentNum, studentPass, openId
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from student_info
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from student_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
     <select id="selectByOpenId" resultType="com.zhifa.gdou.model.StudentInfo">
         SELECT * FROM student_info
         WHERE openId=#{openId}
@@ -34,84 +34,88 @@
       WHERE studentNum=#{studentNum}
     </select>
     <select id="findAllStudents" resultType="com.zhifa.gdou.model.StudentInfo">
-      select * from student_info
-      <where>
-        <if test="studentname !=null and studentname != ''">
-          and studentName like #{studentname}
-        </if>
-      </where>
+        select * from student_info
+        <where>
+            <if test="studentname !=null and studentname != ''">
+                and studentName like #{studentname}
+            </if>
+        </where>
     </select>
     <select id="findOpenIdByStuNo" resultType="java.lang.String">
        select openId from student_info
         where studentNum = #{studentNum}
 
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="findTxl" resultType="com.zhifa.gdou.model.StudentInfo">
+       select * from student_info where  studentNum in
+            (SELECT ci.studentNum FROM class_info as ci WHERE ci.class_name=(SELECT DISTINCT class_name FROM class_info WHERE studentNum=#{studentNum} LIMIT 1))
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from student_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zhifa.gdou.model.StudentInfo" >
+    <insert id="insert" parameterType="com.zhifa.gdou.model.StudentInfo">
     insert into student_info (id, studentName, studentNum, 
       studentPass, openId)
     values (#{id,jdbcType=INTEGER}, #{studentname,jdbcType=VARCHAR}, #{studentnum,jdbcType=VARCHAR}, 
       #{studentpass,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhifa.gdou.model.StudentInfo" >
-    insert into student_info
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="studentname != null" >
-        studentName,
-      </if>
-      <if test="studentnum != null" >
-        studentNum,
-      </if>
-      <if test="studentpass != null" >
-        studentPass,
-      </if>
-      <if test="openid != null" >
-        openId,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="studentname != null" >
-        #{studentname,jdbcType=VARCHAR},
-      </if>
-      <if test="studentnum != null" >
-        #{studentnum,jdbcType=VARCHAR},
-      </if>
-      <if test="studentpass != null" >
-        #{studentpass,jdbcType=VARCHAR},
-      </if>
-      <if test="openid != null" >
-        #{openid,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhifa.gdou.model.StudentInfo" >
-    update student_info
-    <set >
-      <if test="studentname != null" >
-        studentName = #{studentname,jdbcType=VARCHAR},
-      </if>
-      <if test="studentnum != null" >
-        studentNum = #{studentnum,jdbcType=VARCHAR},
-      </if>
-      <if test="studentpass != null" >
-        studentPass = #{studentpass,jdbcType=VARCHAR},
-      </if>
-      <if test="openid != null" >
-        openId = #{openid,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhifa.gdou.model.StudentInfo" >
+    <insert id="insertSelective" parameterType="com.zhifa.gdou.model.StudentInfo">
+        insert into student_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="studentname != null">
+                studentName,
+            </if>
+            <if test="studentnum != null">
+                studentNum,
+            </if>
+            <if test="studentpass != null">
+                studentPass,
+            </if>
+            <if test="openid != null">
+                openId,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="studentname != null">
+                #{studentname,jdbcType=VARCHAR},
+            </if>
+            <if test="studentnum != null">
+                #{studentnum,jdbcType=VARCHAR},
+            </if>
+            <if test="studentpass != null">
+                #{studentpass,jdbcType=VARCHAR},
+            </if>
+            <if test="openid != null">
+                #{openid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zhifa.gdou.model.StudentInfo">
+        update student_info
+        <set>
+            <if test="studentname != null">
+                studentName = #{studentname,jdbcType=VARCHAR},
+            </if>
+            <if test="studentnum != null">
+                studentNum = #{studentnum,jdbcType=VARCHAR},
+            </if>
+            <if test="studentpass != null">
+                studentPass = #{studentpass,jdbcType=VARCHAR},
+            </if>
+            <if test="openid != null">
+                openId = #{openid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zhifa.gdou.model.StudentInfo">
     update student_info
     set studentName = #{studentname,jdbcType=VARCHAR},
       studentNum = #{studentnum,jdbcType=VARCHAR},
@@ -119,7 +123,7 @@
       openId = #{openid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateOpenIdByOpenId">
+    <update id="updateOpenIdByOpenId">
     update student_info
     set openId = ''
     where openId = #{openId,jdbcType=VARCHAR}

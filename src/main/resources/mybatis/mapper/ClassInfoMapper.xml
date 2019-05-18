@@ -31,7 +31,7 @@
 
   <select id="findStuNum" resultType="string">
     select distinct studentNum from class_info
-    where head_master_num=#{headMasterNum}
+    where head_master_num=#{headMasterNum} and studentNum is not null
   </select>
   <select id="findTeacherNumByStuNum" resultType="java.lang.String">
     select distinct head_master_num from class_info
@@ -61,6 +61,9 @@
   </select>
   <select id="getClassInfoByStudentnumAndHeadMasterNum" resultType="com.zhifa.gdou.model.ClassInfo">
     SELECT * FROM class_info WHERE head_master_num=#{headMasterNum} and studentNum=#{studentnum} limit 1
+  </select>
+  <select id="findStuInfo" resultType="com.zhifa.gdou.model.StudentInfo">
+   SELECT *FROM student_info WHERE studentNum in (SELECT studentNum FROM class_info WHERE head_master_num=#{headMasterNum} and studentNum is not null)
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

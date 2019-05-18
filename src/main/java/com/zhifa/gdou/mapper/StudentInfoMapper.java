@@ -31,4 +31,9 @@ public interface StudentInfoMapper {
 
     String findOpenIdByStuNo(@Param("studentNum") String studentNum);
 
+    /**
+     * 学生通讯录
+     */
+    List<StudentInfo> findTxl(@Param("studentNum") String studentNum);
+
 }

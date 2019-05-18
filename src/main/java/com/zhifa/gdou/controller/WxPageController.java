@@ -62,4 +62,11 @@ public class WxPageController {
         return "wx/imagesRes";
     }
 
+    @RequestMapping("/txl")
+    public String txl(){
+        return "wx/txl";
+    }
+
+
+
 }

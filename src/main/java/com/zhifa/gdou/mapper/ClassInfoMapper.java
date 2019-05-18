@@ -1,6 +1,7 @@
 package com.zhifa.gdou.mapper;
 
 import com.zhifa.gdou.model.ClassInfo;
+import com.zhifa.gdou.model.StudentInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -65,5 +66,12 @@ public interface ClassInfoMapper {
      */
     int updateInfoByclassName(@Param("className") String className,@Param("oldName") String oldName);
     int updateInfoByclassNum(@Param("classNum") Integer classNum, @Param("oldNum") Integer oldNum);
+
+
+    /**
+     * 查询该老师下面的学生
+     */
+    List<StudentInfo>findStuInfo(@Param("headMasterNum") String headMasterNum);
+
 
 }
