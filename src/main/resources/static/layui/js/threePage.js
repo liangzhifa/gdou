@@ -1,10 +1,10 @@
 var testCourse=new Array();
 $(document).ready(function(){
     /*页面 4 的 留言查询*/
-    $.ajax({
+    /*$.ajax({
         url:"/wx/getLeavingMsg",
         success:function(result){
-            var tab4 = $("#tab4");
+            var tab4 = $("#txl");
             if (result!=null){
                 console.log(result)
                 for (var res in result) {
@@ -29,13 +29,20 @@ $(document).ready(function(){
                         '</div>'+
                         '</div>'+
                         '</div>';
-                    $("#tab4").append(temp)
-                    $("#tab4").append(" </br>");
+                    $("#txl").append(temp)
+                    //$("#tab4").append(" </br>");
                 }
+                for (var i = 0; i <1 ; i++) {
+                    $("#txl").append(" </br>");
+                }
+                for (var i = 0; i <5 ; i++) {
+                    $("#footer").append(" </br>");
+                }
+
             }
 
         }
-    });
+    });*/
 
     /*获取该学生所有的课程*/
     $.getJSON('/wx/getCourseAll', function(res) {

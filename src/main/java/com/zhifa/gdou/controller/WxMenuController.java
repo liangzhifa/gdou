@@ -143,6 +143,17 @@ public class WxMenuController {
     @WxAsyncMessage
     public void class_info(WxRequest wxRequest) {
     }
+ /**学生相关
+     * 定义微信菜单，并接受事件
+     */
+    @WxButton(type = WxButton.Type.VIEW,
+            group = WxButton.Group.LEFT,
+            order = WxButton.Order.THIRD,
+            url = "/wx/liuyan",
+            name = "留言信息")
+    @WxAsyncMessage
+    public void liuyan(WxRequest wxRequest) {
+    }
 
 
 
@@ -151,7 +162,7 @@ public class WxMenuController {
      */
     @WxButton(type = WxButton.Type.CLICK,
             group = WxButton.Group.LEFT,
-            order = WxButton.Order.THIRD,
+            order = WxButton.Order.FORTH,
             name = "清除登录")
     public String leftSECOND(WxRequest wxRequest, WxUser wxUser) {
         //log.info("wxRequest=>{}",wxRequest);

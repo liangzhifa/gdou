@@ -3,10 +3,7 @@ package com.zhifa.gdou.controller;
 import com.mxixm.fastboot.weixin.annotation.WxController;
 import com.mxixm.fastboot.weixin.util.WxWebUtils;
 import com.zhifa.gdou.mapper.*;
-import com.zhifa.gdou.model.StudentInfo;
-import com.zhifa.gdou.model.StudentInfoDetail;
-import com.zhifa.gdou.model.Teacher;
-import com.zhifa.gdou.model.WxUserAttention;
+import com.zhifa.gdou.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +11,14 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @WxController
-public class TxlCotroller {
+public class TxlLiuYanCotroller {
 
 
-    private static final Logger loger = LoggerFactory.getLogger(TxlCotroller.class);
+    private static final Logger loger = LoggerFactory.getLogger(TxlLiuYanCotroller.class);
     @Autowired
     private StudentInfoMapper studentInfoMapper;
 
@@ -36,6 +34,10 @@ public class TxlCotroller {
 
     @Autowired
     private ClassInfoMapper classInfoMapper;
+
+
+    @Autowired
+    private LeavingMessageMapper leavingMessageMapper;
 
 
     @RequestMapping("/wx/getTxl")
@@ -66,7 +68,7 @@ public class TxlCotroller {
                     email = detail.getEmail();
                     address = detail.getAddress();
                 }
-                String template = "<a href=\"javascript:void(0);\" class=\"weui-media-box weui-media-box_appmsg\">\n" +
+                String template = "<a href=\"tel:"+phone+"\" class=\"weui-media-box weui-media-box_appmsg\">\n" +
                         "                <div class=\"weui-media-box__hd\">\n" +
                         "                    <img class=\"weui-media-box__thumb\"\n" +
                         "                         src=\""+img+"\"\n" +
@@ -106,7 +108,7 @@ public class TxlCotroller {
                     email = detail.getEmail();
                     address = detail.getAddress();
                 }
-                String template = "<a href=\"javascript:void(0);\" class=\"weui-media-box weui-media-box_appmsg\">\n" +
+                String template = "<a href=\"tel:"+phone+"\" class=\"weui-media-box weui-media-box_appmsg\">\n" +
                         "                <div class=\"weui-media-box__hd\">\n" +
                         "                    <img class=\"weui-media-box__thumb\"\n" +
                         "                         src=\""+img+"\"\n" +
@@ -127,4 +129,20 @@ public class TxlCotroller {
 
         return "";
     }
+
+    @RequestMapping("/wx/getLiuyan")
+    @ResponseBody
+    public Object  getLiuyan(){
+        String openId = WxWebUtils.getWxWebUserFromSession().getOpenId();
+        StudentInfo student = studentInfoMapper.selectByOpenId(openId);
+        if (!ObjectUtils.isEmpty(student)) {
+            String teacherNum = classInfoMapper.findTeacherNumByStuNum(student.getStudentnum());
+            List<LeavingMessage> messages = leavingMessageMapper.getTeacherLeavingContent(teacherNum);
+            loger.info("学生 {} 访问留言信息",student.getStudentname());
+            return messages;
+        }
+        return new ArrayList<>();
+    }
+
+
 }

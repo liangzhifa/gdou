@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhifa.gdou.mapper.WxEmMsgMapper" >
+  <resultMap id="BaseResultMap" type="com.zhifa.gdou.model.WxEmMsg" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="openId" property="openid" jdbcType="VARCHAR" />
+    <result column="test_time" property="testTime" jdbcType="DATE" />
+    <result column="wx_msg_status" property="wxMsgStatus" jdbcType="VARCHAR" />
+    <result column="email_msg_status" property="emailMsgStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, openId, test_time, wx_msg_status, email_msg_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_send_msg
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <select id="findMgsByOpenIdAndDate" resultType="com.zhifa.gdou.model.WxEmMsg">
+    SELECT * from wx_send_msg WHERE openId=#{openId}  and  test_time=#{test_time}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from wx_send_msg
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhifa.gdou.model.WxEmMsg" >
+    insert into wx_send_msg (uuid, openId, test_time, 
+      wx_msg_status, email_msg_status)
+    values (#{uuid,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{testTime,jdbcType=DATE}, 
+      #{wxMsgStatus,jdbcType=VARCHAR}, #{emailMsgStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhifa.gdou.model.WxEmMsg" >
+    insert into wx_send_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="openid != null" >
+        openId,
+      </if>
+      <if test="testTime != null" >
+        test_time,
+      </if>
+      <if test="wxMsgStatus != null" >
+        wx_msg_status,
+      </if>
+      <if test="emailMsgStatus != null" >
+        email_msg_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="testTime != null" >
+        #{testTime,jdbcType=DATE},
+      </if>
+      <if test="wxMsgStatus != null" >
+        #{wxMsgStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="emailMsgStatus != null" >
+        #{emailMsgStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhifa.gdou.model.WxEmMsg" >
+    update wx_send_msg
+    <set >
+      <if test="openid != null" >
+        openId = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="testTime != null" >
+        test_time = #{testTime,jdbcType=DATE},
+      </if>
+      <if test="wxMsgStatus != null" >
+        wx_msg_status = #{wxMsgStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="emailMsgStatus != null" >
+        email_msg_status = #{emailMsgStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhifa.gdou.model.WxEmMsg" >
+    update wx_send_msg
+    set openId = #{openid,jdbcType=VARCHAR},
+      test_time = #{testTime,jdbcType=DATE},
+      wx_msg_status = #{wxMsgStatus,jdbcType=VARCHAR},
+      email_msg_status = #{emailMsgStatus,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

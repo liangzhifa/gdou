@@ -6,13 +6,10 @@ import com.mxixm.fastboot.weixin.module.message.WxMessage;
 import com.mxixm.fastboot.weixin.module.message.WxMessageBody;
 import com.mxixm.fastboot.weixin.module.message.WxMessageTemplate;
 import com.mxixm.fastboot.weixin.module.message.WxUserMessage;
-import com.zhifa.gdou.mapper.ClassInfoMapper;
-import com.zhifa.gdou.mapper.ScoreSheetMapper;
-import com.zhifa.gdou.mapper.StudentInfoMapper;
-import com.zhifa.gdou.model.ClassInfo;
-import com.zhifa.gdou.model.ScoreSheet;
-import com.zhifa.gdou.model.Teacher;
+import com.zhifa.gdou.mapper.*;
+import com.zhifa.gdou.model.*;
 import com.zhifa.gdou.resultEntity.LayUIDataGrid;
+import com.zhifa.gdou.resultEntity.RankingDTO;
 import com.zhifa.gdou.resultEntity.ScoreResultEntity;
 import com.zhifa.gdou.utils.ExcelUtil;
 import com.zhifa.gdou.utils.ScoreTempEntity;
@@ -24,6 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -54,6 +55,14 @@ public class ScoreSheetController {
     @Autowired
     private WxMessageTemplate wxMessageTemplate;
 
+    /**
+     * @Author: zhifa
+     * @Date: 2019/5/18
+     * @Description: qq邮箱推送
+     */
+    @Autowired
+    private JavaMailSender jms;
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -69,7 +78,15 @@ public class ScoreSheetController {
     private StudentInfoMapper studentInfoMapper;
 
     @Autowired
+    private StudentInfoDetailMapper studentInfoDetailMapper;
+
+
+
+    @Autowired
     private ClassInfoMapper classInfoMapper;
+
+    @Autowired
+    private WxEmMsgMapper wxEmMsgMapper;
 
     /**
      * 上传Excel 录入成绩  成绩录入成功后异步通知微信发送消息
@@ -80,6 +97,7 @@ public class ScoreSheetController {
      * @return
      */
     @RequestMapping(value = "/upload/studentScore")
+    @Transactional
     public Object uploadstudentScore(@RequestParam(value = "excel") MultipartFile excel,
                                      HttpServletRequest request,
                                      HttpServletResponse response,
@@ -118,6 +136,7 @@ public class ScoreSheetController {
                         loger.info("过滤不是这个老师下面的学生: {}",stuNum);
                         continue;
                     }
+
                     String stuName=sheet.getRow(i).getCell(1).toString();
                     Date testTime = sheet.getRow(i).getCell(2).getDateCellValue();
 
@@ -173,19 +192,37 @@ public class ScoreSheetController {
                     try {
                         String openId = studentInfoMapper.findOpenIdByStuNo(stuNum);
                         if (!ObjectUtils.isEmpty(openId)){
-                            WxUserMessage build = WxMessage.newsBuilder()
-                                    .addItem(WxMessageBody.News.Item.builder().title("最新成绩出来啦").description("点击查看")
-                                            .picUrl("http://mmbiz.qpic.cn/mmbiz_jpg/BXa2ick0Zc8mhZBGSicbe5xd8q1vbESAWOjjOKw4icggiaZlIUP0Woj8FibWHp8yeVLvCJbwg46BfQLCPUlf8WeCib4g/0")
-                                            .url("/wx/main").build())
-                                    .build();
-                            wxMessageTemplate.sendMessage(openId,build);  //setToUser("ovwMI59y1dfGKq2kJ9yDn96-kUPM");
+                            WxEmMsg wxEmMsg = wxEmMsgMapper.findMgsByOpenIdAndDate(openId, testTime);
+                            if (ObjectUtils.isEmpty(wxEmMsg)) {
+                                wxEmMsg = new WxEmMsg(UUID.randomUUID().toString(), openId, testTime);
+                                wxEmMsgMapper.insert(wxEmMsg);
+                                try {
+                                    WxUserMessage build = buildView();
+                                    wxMessageTemplate.sendMessage(openId, build);  //setToUser("ovwMI59y1dfGKq2kJ9yDn96-kUPM");
+                                    wxEmMsg.setWxMsgStatus("1");
+                                    wxEmMsgMapper.updateByPrimaryKeySelective(wxEmMsg);
+                                } catch (Exception e) {
+                                    loger.info("微信端 推送失败 {}", e.getMessage());
+                                }
+                                loger.info("微信端 成绩推送到 学号为 {},名字： {}", stuNum, stuName);
+                            } else {
+                                if (wxEmMsg.getWxMsgStatus().equals("0")) {
+                                    try {
+                                        WxUserMessage build = buildView();
+                                        wxMessageTemplate.sendMessage(openId, build);  //setToUser("ovwMI59y1dfGKq2kJ9yDn96-kUPM");
+                                        wxEmMsg.setWxMsgStatus("1");
+                                        wxEmMsgMapper.updateByPrimaryKeySelective(wxEmMsg);
+                                    } catch (Exception e) {
+                                        loger.info("微信端 重新推送失败 {}", e.getMessage());
+                                    }
+                                    loger.info("微信端 成绩重新推送到 学号为 {},名字： {}", stuNum, stuName);
+                                } else {
+                                    loger.info("学号={} 已经推送过了",stuNum);
+                                }
+                            }
                         }
-                        loger.info("成绩推送到 学号为 {},名字： {}",stuNum,stuName);
                     } catch (Exception e) {
-                        loger.info("推送失败 {}",e.getMessage());
                     }
-
-
                 }
                 System.out.println("============上传完毕===========");
             }
@@ -200,6 +237,15 @@ public class ScoreSheetController {
         return map;
     }
 
+    private WxUserMessage buildView() {
+        WxUserMessage build = WxMessage.newsBuilder()
+                .addItem(WxMessageBody.News.Item.builder().title("最新成绩出来啦").description("点击查看")
+                        .picUrl("http://mmbiz.qpic.cn/mmbiz_jpg/BXa2ick0Zc8mhZBGSicbe5xd8q1vbESAWOjjOKw4icggiaZlIUP0Woj8FibWHp8yeVLvCJbwg46BfQLCPUlf8WeCib4g/0")
+                        .url("/wx/main").build())
+                .build();
+        return build;
+    }
+
 
     private boolean isNotExiteScore(ScoreSheet scoreSheet){
         ScoreSheet exiteScore = scoreSheetMapper.isExiteScore(scoreSheet);
@@ -209,6 +255,10 @@ public class ScoreSheetController {
         return false;
     }
 
+    /**
+     * 过滤重复添加
+     * @param scoreSheet
+     */
     private void excuteInsertScore(ScoreSheet scoreSheet){
         if (isNotExiteScore(scoreSheet)){
             scoreSheetMapper.insert(scoreSheet);

@@ -67,6 +67,11 @@ public class WxPageController {
         return "wx/txl";
     }
 
+  @RequestMapping("/liuyan")
+    public String liuyan(){
+        return "wx/liuyan";
+    }
+
 
 
 }
