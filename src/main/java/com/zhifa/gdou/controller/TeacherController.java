@@ -22,6 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @Author: zhifa
+ * @Date: 2019/5/20
+ * @Description:  管理员对的教师后台管理
+ */
 @RestController
 @RequestMapping("/teacher")
 public class TeacherController {
@@ -29,12 +34,13 @@ public class TeacherController {
 
 
     @Autowired
-    TeacherService teacherService;
+    private TeacherService teacherService;
 
     @Autowired
-    TeacherMapper teacherMapper;
+    private TeacherMapper teacherMapper;
+
     @Autowired
-    ClassInfoMapper classInfoMapper;
+    private ClassInfoMapper classInfoMapper;
 
     @RequestMapping("/login")
     public Object login(String teacherNum, String teacherPassword, HttpSession httpSession){

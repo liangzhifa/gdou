@@ -55,14 +55,6 @@ public class ScoreSheetController {
     @Autowired
     private WxMessageTemplate wxMessageTemplate;
 
-    /**
-     * @Author: zhifa
-     * @Date: 2019/5/18
-     * @Description: qq邮箱推送
-     */
-    @Autowired
-    private JavaMailSender jms;
-
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -247,12 +239,9 @@ public class ScoreSheetController {
     }
 
 
-    private boolean isNotExiteScore(ScoreSheet scoreSheet){
+    private ScoreSheet isNotExiteScore(ScoreSheet scoreSheet){
         ScoreSheet exiteScore = scoreSheetMapper.isExiteScore(scoreSheet);
-        if (ObjectUtils.isEmpty(exiteScore)){
-            return true;
-        }
-        return false;
+      return exiteScore;
     }
 
     /**
@@ -260,10 +249,18 @@ public class ScoreSheetController {
      * @param scoreSheet
      */
     private void excuteInsertScore(ScoreSheet scoreSheet){
-        if (isNotExiteScore(scoreSheet)){
+        ScoreSheet score = isNotExiteScore(scoreSheet);
+        if (ObjectUtils.isEmpty(score)){
             scoreSheetMapper.insert(scoreSheet);
         }else {
-            loger.info("成绩信息已经存在  {}",scoreSheet);
+
+            if (scoreSheet.getScore() == score.getScore()) {
+                loger.info("成绩信息已经存在,进行过滤操作  {}",scoreSheet);
+            } else {
+                scoreSheet.setId(score.getId());
+                scoreSheetMapper.updateByPrimaryKeySelective(scoreSheet);
+                loger.info("成绩信息已经存在,进行更新操作  {}",scoreSheet);
+            }
         }
     }
 

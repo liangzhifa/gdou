@@ -16,7 +16,15 @@
     from student_info_detail
     where stuNo = #{stuno,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="findStuDetailInfoByTeachNo" resultType="com.zhifa.gdou.model.StudentInfoDetail">
+      SELECT DISTINCT
+	*
+FROM
+	student_info_detail
+WHERE
+	stuNo IN ( SELECT studentNum FROM class_info WHERE head_master_num IN ( SELECT teacher_num FROM teacher WHERE teacher_num = #{teacherNum} ) )
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from student_info_detail
     where stuNo = #{stuno,jdbcType=VARCHAR}
   </delete>

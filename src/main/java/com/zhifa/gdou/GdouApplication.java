@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan(basePackages = {"com.zhifa.gdou.mapper"})
 @EnableWxMvc
 @EnableTransactionManagement//开启事务
+//@EnableScheduling//定时检测 发送邮件
 public class GdouApplication {
 
     public static void main(String[] args) {
