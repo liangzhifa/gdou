@@ -36,9 +36,6 @@ import java.util.HashMap;
 @com.mxixm.fastboot.weixin.annotation.WxController
 public class WxMenuController {
 
-    @Autowired
-    private WxImageInfoMapper wxImageInfoMapper;
-
 
 
     private static Logger log = LoggerFactory.getLogger(WxMenuController.class);
@@ -54,11 +51,6 @@ public class WxMenuController {
 
     @Autowired
     private TeacherMapper teacherMapper;
-
-    @Autowired
-    private AipOcr aipOcr ;
-    @Autowired
-    private TransApi transApi ;
 
     /**
      * 定义微信菜单
@@ -218,6 +210,34 @@ public class WxMenuController {
     public void gushiwen(WxRequest wxRequest){
     }
 
+    /**
+     * 定义微信菜单，并接受事件
+     */
+    @WxButton(type = WxButton.Type.CLICK,
+            group = WxButton.Group.RIGHT,
+            order = WxButton.Order.FIFTH,
+            name = "更多信息")
+    public String gengduowangzhan(WxRequest wxRequest, WxUser wxUser) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("回复对应数字跳转到对应网站哦O(∩_∩)O~").append("\n");
+        sb.append("1  小学学科网").append("\n");
+        sb.append("2  小学教课资源").append("\n");
+        sb.append("3  原中小学教育资源网").append("\n");
+        sb.append("4  初中教学资源网").append("\n");
+        sb.append("5  中学课件网").append("\n");
+        sb.append("6  高考资源网").append("\n");
+        sb.append("7  全国高考分数线").append("\n");
+        sb.append("8  高考分数查询入口").append("\n");
+        sb.append("9  模拟志愿填报").append("\n");
+        sb.append("10  志愿填报入口").append("\n");
+        sb.append("11  高考专业").append("\n");
+
+
+        String str =sb.toString();
+        return str;
+    }
+
+
 
 
     /**退订
@@ -244,63 +264,11 @@ public class WxMenuController {
         if (ObjectUtils.isEmpty(wxUserAttention)){
             wxUserAttentionMapper.insert(WxBeanUtil.WxUserToWxUserAttention(wxUser));
         }
-        return "非常感谢 "+wxUser.getNickName() + " 订阅了GDOU家校服务   /:rose";
+        return "非常感谢 "+wxUser.getNickName() + " 订阅GDOU家校服务   /:rose";
     }
 
 
 
-
-    @WxMessageMapping(type = WxMessage.Type.TEXT,wildcard = "**")
-    @WxAsyncMessage
-    public String text(WxRequest wxRequest, String content) {
-        log.info("调用了 text WxMessage.Type.TEXT wxRequest==>{}",wxRequest);
-        WxSession wxSession = wxRequest.getWxSession();
-        if (wxSession != null && wxSession.getAttribute("last") != null) {
-            wxSession.setAttribute("last", content);
-            return "上次收到消息内容为" + wxSession.getAttribute("last");
-        }
-        System.out.println(content);
-        return  content;
-    }
-
-
-    /**
-     * 接受用户图片消息，异步返回文本消息
-     * @param
-     * @return the result
-     */
-    @WxMessageMapping(type = WxMessage.Type.IMAGE)
-    public String image(WxRequest wxRequest, WxRequestBody.Image image,String content) {
-        WxRequest.Body body = wxRequest.getBody();
-        String picUrl = image.getPicUrl();
-        String openId = wxRequest.getOpenId();
-        log.info("调用了image WxMessage.Type.IMAGE => openId={}  getPicUrl={}",openId,picUrl);
-        if (ObjectUtils.isEmpty(picUrl)){
-            return content;
-        }
-        WxImageInfo wxImageInfo = new WxImageInfo(openId,picUrl,new Date());
-        wxImageInfoMapper.insert(wxImageInfo);
-        // 通用文字识别, 图片参数为远程url图片
-        byte[] fileStream = ImagesUtils.getFileStream(picUrl);
-        //JSONObject resJson = JSONObject.parseObject(aipOcr.basicAccurateGeneral(fileStream, new HashMap<String, String>()).toString(2));
-       /* return WxMessage.newsBuilder()
-                .addItem(WxMessageBody.News.Item.builder().title("图像识别结果").description("点击查看")
-                        .picUrl(picUrl)
-                        .url(serverUrl+"/wx/imagesRes").build())
-                .build();*/
-        com.alibaba.fastjson.JSONObject resJson = JSONObject.parseObject(aipOcr.basicAccurateGeneral(fileStream, new HashMap<String, String>()).toString(2));
-        JSONArray words_results = resJson.getJSONArray("words_result");
-        StringBuffer bf = new StringBuffer();
-
-        for (int i = 0; i < words_results.size(); i++) {
-            bf.append(words_results.getJSONObject(i).getString("words"));
-        }
-        log.info("完成读取图片文字={}",bf.toString());
-        JSONObject stranslate = JSONObject.parseObject(transApi.getTransResult(bf.toString(), "auto", "en"));
-        String stranslateRes = stranslate.getJSONArray("trans_result").getJSONObject(0).getString("dst");
-        log.info("完成翻译= {}",stranslateRes);
-        return  stranslateRes;
-    }
 
 
 }
