@@ -1,27 +1,17 @@
 package com.zhifa.gdou.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.baidu.aip.ocr.AipOcr;
 import com.mxixm.fastboot.weixin.annotation.WxAsyncMessage;
 import com.mxixm.fastboot.weixin.annotation.WxButton;
 import com.mxixm.fastboot.weixin.annotation.WxEventMapping;
-import com.mxixm.fastboot.weixin.annotation.WxMessageMapping;
 import com.mxixm.fastboot.weixin.module.event.WxEvent;
-import com.mxixm.fastboot.weixin.module.message.WxMessage;
-import com.mxixm.fastboot.weixin.module.message.WxMessageBody;
 import com.mxixm.fastboot.weixin.module.user.WxUser;
 import com.mxixm.fastboot.weixin.module.web.WxRequest;
-import com.mxixm.fastboot.weixin.module.web.WxRequestBody;
-import com.mxixm.fastboot.weixin.module.web.session.WxSession;
-import com.zhifa.gdou.config.baidu.TransApi;
 import com.zhifa.gdou.mapper.StudentInfoMapper;
 import com.zhifa.gdou.mapper.TeacherMapper;
-import com.zhifa.gdou.mapper.WxImageInfoMapper;
+import com.zhifa.gdou.mapper.WxMoreInfoMapper;
 import com.zhifa.gdou.mapper.WxUserAttentionMapper;
-import com.zhifa.gdou.model.WxImageInfo;
+import com.zhifa.gdou.model.WxMoreInfo;
 import com.zhifa.gdou.model.WxUserAttention;
-import com.zhifa.gdou.utils.ImagesUtils;
 import com.zhifa.gdou.utils.WxBeanUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
 
 @com.mxixm.fastboot.weixin.annotation.WxController
@@ -51,6 +40,11 @@ public class WxMenuController {
 
     @Autowired
     private TeacherMapper teacherMapper;
+
+    @Autowired
+    private WxMoreInfoMapper wxMoreInfoMapper;
+
+
 
     /**
      * 定义微信菜单
@@ -220,7 +214,12 @@ public class WxMenuController {
     public String gengduowangzhan(WxRequest wxRequest, WxUser wxUser) {
         StringBuilder sb = new StringBuilder();
         sb.append("回复对应数字跳转到对应网站哦O(∩_∩)O~").append("\n");
-        sb.append("1  小学学科网").append("\n");
+        List<WxMoreInfo> wxMoreInfos = wxMoreInfoMapper.getAll();
+        for (int i = 0; i < wxMoreInfos.size(); i++) {
+            WxMoreInfo info = wxMoreInfos.get(i);
+            sb.append(info.getId()).append(" ").append(info.getTitle()).append("\n");
+        }
+      /*  sb.append("1  小学学科网").append("\n");
         sb.append("2  小学教课资源").append("\n");
         sb.append("3  原中小学教育资源网").append("\n");
         sb.append("4  初中教学资源网").append("\n");
@@ -231,8 +230,7 @@ public class WxMenuController {
         sb.append("9  模拟志愿填报").append("\n");
         sb.append("10  志愿填报入口").append("\n");
         sb.append("11  高考专业").append("\n");
-
-
+*/
         String str =sb.toString();
         return str;
     }

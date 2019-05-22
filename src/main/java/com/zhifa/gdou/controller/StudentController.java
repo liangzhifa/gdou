@@ -34,9 +34,9 @@ import java.util.*;
  */
 
 @RestController
-public class StudenController {
+public class StudentController {
 
-    private static final Logger loger = LoggerFactory.getLogger(StudenController.class);
+    private static final Logger loger = LoggerFactory.getLogger(StudentController.class);
 
 
     @Autowired
@@ -54,7 +54,7 @@ public class StudenController {
     @Autowired
     private LeavingMessageMapper leavingMessageMapper;
 
-    private static Logger log = LoggerFactory.getLogger(StudenController.class);
+    private static Logger log = LoggerFactory.getLogger(StudentController.class);
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -362,6 +362,7 @@ public class StudenController {
         if (n>0){
             classInfoMapper.deleteClassInfoByStuNo(studentInfo.getStudentnum());
             map.put("status",true);
+            map.put("msg","操作成功");
             studentInfoDetailMapper.deleteByPrimaryKey(studentInfo.getStudentnum());
             return map;
         }

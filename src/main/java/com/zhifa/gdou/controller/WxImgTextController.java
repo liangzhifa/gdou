@@ -13,7 +13,9 @@ import com.mxixm.fastboot.weixin.module.web.WxRequest;
 import com.mxixm.fastboot.weixin.module.web.WxRequestBody;
 import com.zhifa.gdou.config.baidu.TransApi;
 import com.zhifa.gdou.mapper.WxImageInfoMapper;
+import com.zhifa.gdou.mapper.WxMoreInfoMapper;
 import com.zhifa.gdou.model.WxImageInfo;
+import com.zhifa.gdou.model.WxMoreInfo;
 import com.zhifa.gdou.utils.ImagesUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +33,15 @@ public class WxImgTextController {
 
     @Autowired
     private AipOcr aipOcr;
+
     @Autowired
     private TransApi transApi;
+
     @Autowired
     private WxImageInfoMapper wxImageInfoMapper;
+
+    @Autowired
+    private WxMoreInfoMapper wxMoreInfoMapper;
 
 
     /**
@@ -75,7 +82,53 @@ public class WxImgTextController {
     public WxUserMessage text(WxRequest wxRequest, String content) {
         log.info("调用了 text WxMessage.Type.TEXT wxRequest==>{}", wxRequest);
         WxUserMessage build = null;
-        switch (content) {
+        if (content.matches("[\\d]+")) {
+            WxMoreInfo wxMoreInfo = wxMoreInfoMapper.selectByPrimaryKey(Integer.valueOf(content));
+            if (!ObjectUtils.isEmpty(wxMoreInfo)) {
+                build = WxMessage.newsBuilder()
+                        .addItem(WxMessageBody.News.Item.builder().title(wxMoreInfo.getTitle()).description(wxMoreInfo.getDescription())
+                                .picUrl(wxMoreInfo.getPicurl())
+                                .url(wxMoreInfo.getUrl()).build())
+                        .build();
+                return build;
+            }
+        }
+        build = WxMessage.newsBuilder()
+                .addItem(WxMessageBody.News.Item.builder().title("成绩").description("点击查看")
+                        .picUrl("http://mmbiz.qpic.cn/mmbiz_jpg/BXa2ick0Zc8mhZBGSicbe5xd8q1vbESAWOjjOKw4icggiaZlIUP0Woj8FibWHp8yeVLvCJbwg46BfQLCPUlf8WeCib4g/0")
+                        .url("/wx/main").build())
+                .build();
+
+        return build;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+switch (content) {
             case "1":
                 build = build1();
                 break;
@@ -112,11 +165,6 @@ public class WxImgTextController {
             default:
                 build = moren();
         }
-
-        return build;
-    }
-
-
     private WxUserMessage moren() {
         return WxMessage.newsBuilder()
                 .addItem(WxMessageBody.News.Item.builder().title("成绩").description("点击查看")
@@ -224,6 +272,7 @@ public class WxImgTextController {
                 .build();
         return build;
     }
+*/
 
 
 }

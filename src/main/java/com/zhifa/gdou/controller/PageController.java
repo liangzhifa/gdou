@@ -68,6 +68,12 @@ public class PageController {
     }
 
 
+  @RequestMapping("/wx_more_info")
+    public String towx_more_info(){
+        return "wx_more_info";
+    }
+
+
 
 
 }
