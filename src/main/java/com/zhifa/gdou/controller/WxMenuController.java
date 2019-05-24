@@ -195,9 +195,20 @@ public class WxMenuController {
     public void youdaofanyi(WxRequest wxRequest){
     }
 
-    @WxButton(type =WxButton.Type.VIEW,
+      @WxButton(type =WxButton.Type.VIEW,
             group = WxButton.Group.MIDDLE,
             order = WxButton.Order.THIRD,
+            url = "https://chengyu.911cha.com/",
+            name="成语词典")
+    @WxAsyncMessage
+    public void chengyuzidian(WxRequest wxRequest){
+    }
+
+
+
+    @WxButton(type =WxButton.Type.VIEW,
+            group = WxButton.Group.MIDDLE,
+            order = WxButton.Order.FORTH,
             url = "https://m.gushiwen.org/",
             name="古诗文")
     @WxAsyncMessage

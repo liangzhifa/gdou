@@ -127,6 +127,9 @@ public class WxImgTextController {
 
 
 
+
+
+
 /*
 switch (content) {
             case "1":
