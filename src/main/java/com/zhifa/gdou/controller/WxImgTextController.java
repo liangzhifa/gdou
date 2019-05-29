@@ -70,10 +70,13 @@ public class WxImgTextController {
             bf.append(words_results.getJSONObject(i).getString("words"));
         }
         log.info("完成读取图片文字={}", bf.toString());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("图片原文: ").append(bf.toString());
         JSONObject stranslate = JSONObject.parseObject(transApi.getTransResult(bf.toString(), "auto", "en"));
         String stranslateRes = stranslate.getJSONArray("trans_result").getJSONObject(0).getString("dst");
         log.info("完成翻译= {}", stranslateRes);
-        return stranslateRes;
+        stringBuilder.append("译文: ").append(stranslateRes);
+        return stringBuilder.toString();
     }
 
 
