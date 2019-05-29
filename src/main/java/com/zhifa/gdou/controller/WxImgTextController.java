@@ -51,6 +51,7 @@ public class WxImgTextController {
      * @return the result
      */
     @WxMessageMapping(type = WxMessage.Type.IMAGE)
+    @WxAsyncMessage
     public String image(WxRequest wxRequest, WxRequestBody.Image image, String content) {
         WxRequest.Body body = wxRequest.getBody();
         String picUrl = image.getPicUrl();
@@ -71,7 +72,7 @@ public class WxImgTextController {
         }
         log.info("完成读取图片文字={}", bf.toString());
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("图片原文: ").append(bf.toString());
+        stringBuilder.append("图片原文: ").append(bf.toString()).append("\n");
         JSONObject stranslate = JSONObject.parseObject(transApi.getTransResult(bf.toString(), "auto", "en"));
         String stranslateRes = stranslate.getJSONArray("trans_result").getJSONObject(0).getString("dst");
         log.info("完成翻译= {}", stranslateRes);
