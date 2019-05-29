@@ -67,6 +67,7 @@ public class LoginConfig implements HandlerInterceptor {
         managerUrl.add("/teacher/deleteById");
         managerUrl.add("/teacher/insertTeacherInfo");
         managerUrl.add("/teacher/modify");
+        managerUrl.add("/upload/studentInfos");
         //=============================
         teacherUrl.add("/student/getScore");
         teacherUrl.add("/student/insertscore");
