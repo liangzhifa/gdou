@@ -50,6 +50,9 @@
        select * from student_info where  studentNum in
             (SELECT ci.studentNum FROM class_info as ci WHERE ci.class_name=(SELECT DISTINCT class_name FROM class_info WHERE studentNum=#{studentNum} LIMIT 1))
     </select>
+    <select id="findStuInfo" resultType="com.zhifa.gdou.model.StudentInfo">
+         select * from student_info where  studentNum=#{studentNum}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from student_info
     where id = #{id,jdbcType=INTEGER}

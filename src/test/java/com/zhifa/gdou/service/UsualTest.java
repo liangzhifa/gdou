@@ -1,7 +1,22 @@
 package com.zhifa.gdou.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 public class UsualTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
+        List<Date> allTestDate = new LinkedList<>();
+        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+        Date parse = df.parse("2016-1-10");
+        System.out.println(parse);
+
+        for (int i = 0; i < 10; i++) {
+            System.out.println(Math.round(Math.random()*40+60));
+        }
+
         String str = "<p style=\"text-align:  center;\">< img        src=\"http://zhifa.daiqee.com/ab05b153-77bf-4867-b7fb-38b121c3f41dtimg.jpg\" style=\"max-width:30%;\"></p ><p style=\"text-align: center;\">< img src=\"http://zhifa.daiqee.com/be70f945-447b-4364-b9fd-2b1b6c5d1680test22.jpg\" style=\"max-width:30%;\"></p ><p style=\"text-align: center;\">啊实打实大苏打撒旦发的方式告诉梵蒂冈士大夫敢死队风格岁的法国<br></p >";
         /*String temp = "qwwwwwwwww";
         str = temp;*/

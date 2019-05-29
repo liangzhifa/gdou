@@ -120,6 +120,10 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="add">添加信息</button>
+        <div class="layui-upload">
+            <button type="button" class="layui-btn layui-btn-sm" id="changeFile">选择文件</button>
+            <button type="button" class="layui-btn layui-btn-sm" id="startUpload">开始上传</button>
+        </div>
     </div>
 </script>
 
@@ -172,7 +176,7 @@
             ,title: '用户数据表'
             ,cols: [[
                  {field:'id', title:'ID', width:50, fixed: 'left', unresize: true , align: 'center'}
-                ,{field:'studentname', title:'学生姓名', width:80 , align: 'center' }
+                ,{field:'studentname', title:'学生姓名', width:100 , align: 'center' }
                 ,{field:'studentnum', title:'学生学号', width:100  , align: 'center' }
                 ,{field:'className', title:'班级', width:100, align: 'center'}
                 ,{field:'phone', title:'手机', width:140, align: 'center'}
@@ -401,6 +405,51 @@
             });
             return false;//如果不加这句，则ajax的回调函数不执行
         });
+    });
+
+    layui.use('upload', function(){
+        var $ = layui.jquery
+            ,upload = layui.upload;
+        //选完文件后不自动上传
+        upload.render({
+            elem: '#changeFile'
+            ,url: '/upload/studentInfos'
+            ,auto: false
+            ,accept: 'file' //允许上传的文件类型
+            //,multiple: true
+            ,bindAction: '#startUpload'
+            ,field:"excel"
+            ,choose: function(obj){
+                //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
+                obj.preview(function(index, file, result){
+                    //console.log(index); //得到文件索引
+                    console.log(file.name); //得到文件对象
+                    // console.log(result); //得到文件base64编码，比如图片
+                    var fileName=file.name;
+                    fileName =fileName.substring(fileName.lastIndexOf('.'), fileName.length);
+                    if (fileName == '') {
+                        alert("上传文件不能为空！");
+                        return;
+                    } else if (fileName != '.xlsx' && fileName != '.xls') {
+                        alert("请选择正确的excel类型文件！");
+                        return;
+                    }
+                });
+            }
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res, index, upload){
+                layer.closeAll('loading'); //关闭loading
+                console.log(res)
+                layer.msg(res.msg);
+                window.location.replace("/manager/student_info");
+            }
+            ,error: function(index, upload){
+                layer.closeAll('loading'); //关闭loading
+            }
+        });
+
     });
 </script>
 

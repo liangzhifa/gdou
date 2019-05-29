@@ -63,6 +63,15 @@ public class StudentInfo extends StudentInfoDetail implements Serializable{
         this.openid = openid == null ? null : openid.trim();
     }
 
+    public StudentInfo() {
+    }
+
+    public StudentInfo(String studentname, String studentnum, String studentpass) {
+        this.studentname = studentname;
+        this.studentnum = studentnum;
+        this.studentpass = studentpass;
+    }
+
     @Override
     public String toString() {
         return "StudentInfo{" +

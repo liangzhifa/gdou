@@ -11,6 +11,9 @@ import com.zhifa.gdou.model.*;
 import com.zhifa.gdou.resultEntity.LayUIDataGrid;
 import com.zhifa.gdou.resultEntity.RankingDTO;
 import com.zhifa.gdou.resultEntity.ScoreVo;
+import com.zhifa.gdou.utils.ExcelUtil;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -22,8 +25,13 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -407,6 +415,71 @@ public class StudentController {
         }
         map.put("code", 0);
         map.put("msg","成功！");
+        return map;
+    }
+
+    @RequestMapping(value = "/upload/studentInfos")
+    @Transactional
+    public Object uploadstudentInfos(@RequestParam(value = "excel") MultipartFile excel,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     HttpSession httpSession) throws IOException {
+
+       Manager manager= (Manager) httpSession.getAttribute("manager");
+        Map<Object,Object>map=new HashMap<>();
+        if (manager==null){
+            map.put("code",1);
+            map.put("msg","请用教师账号登录");
+            return map;
+        }
+        if (!excel.isEmpty() && excel.getOriginalFilename().endsWith("xls")) {
+            // poi--exl解析
+            InputStream is = excel.getInputStream();
+            HSSFWorkbook hssf = new HSSFWorkbook(is);
+            //Sheet1-----是Excel表格左下方的名称
+            HSSFSheet sheet = hssf.getSheet("Sheet1");
+
+            //读取Excel表格从下标0开始（表头开始）
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                String stuNum = ExcelUtil.getHSSFCell(sheet, i, 0).toString();
+                String stuName = ExcelUtil.getHSSFCell(sheet, i, 1).toString();
+                String className = ExcelUtil.getHSSFCell(sheet, i, 2).toString();
+                String stupass = ExcelUtil.getHSSFCell(sheet, i, 3).toString();
+                stupass=DigestUtils.md5DigestAsHex(stupass.getBytes());
+                String phone = ExcelUtil.getHSSFCell(sheet, i, 4).toString();
+                String email = ExcelUtil.getHSSFCell(sheet, i, 5).toString();
+                String addr = ExcelUtil.getHSSFCell(sheet, i, 6).toString();
+                StudentInfo stuInfo = studentInfoMapper.findStuInfo(stuNum);
+                StudentInfo studentInfo = new StudentInfo(stuName,stuNum,stupass);
+                StudentInfoDetail studentInfoDetail = new StudentInfoDetail(stuNum,phone,email,addr);
+                if (ObjectUtils.isEmpty(stuInfo)) {
+                    studentInfoMapper.insert(studentInfo);
+                    studentInfoDetailMapper.insert(studentInfoDetail);
+                    log.info("添加学生信息");
+                } else {
+                    studentInfo.setId(stuInfo.getId());
+                    studentInfoMapper.updateByPrimaryKeySelective(studentInfo);
+                    studentInfoDetailMapper.updateByPrimaryKeySelective(studentInfoDetail);
+                    log.info("修改学生信息");
+                }
+                ClassInfo classInfo = classInfoMapper.findClassByClassName(className);
+                ClassInfo classByStuNo = classInfoMapper.findClassByStuNo(stuNum);
+                if (ObjectUtils.isEmpty(classByStuNo)) {
+                    classInfo.setId(null);
+                    classInfo.setStudentnum(stuNum);
+                    classInfoMapper.insert(classInfo);
+                    log.info("添加学生班级信息");
+                } else {
+                    classByStuNo.setStudentnum(stuNum);
+                    log.info("修改学生班级信息");
+
+                }
+
+            }
+        }
+        map.put("code",0);
+        map.put("msg","上传成功！");
         return map;
     }
 
