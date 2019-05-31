@@ -1,5 +1,6 @@
 package com.zhifa.gdou.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mxixm.fastboot.weixin.module.message.WxMessage;
@@ -192,10 +193,10 @@ public class ScoreSheetController {
                                     wxMessageTemplate.sendMessage(openId, build);  //setToUser("ovwMI59y1dfGKq2kJ9yDn96-kUPM");
                                     wxEmMsg.setWxMsgStatus("1");
                                     wxEmMsgMapper.updateByPrimaryKeySelective(wxEmMsg);
+                                    loger.info("微信端 成绩推送到 学号为 {},名字： {}", stuNum, stuName);
                                 } catch (Exception e) {
-                                    loger.info("微信端 推送失败 {}", e.getMessage());
+                                   pushExceton(e);
                                 }
-                                loger.info("微信端 成绩推送到 学号为 {},名字： {}", stuNum, stuName);
                             } else {
                                 if (wxEmMsg.getWxMsgStatus().equals("0")) {
                                     try {
@@ -203,10 +204,10 @@ public class ScoreSheetController {
                                         wxMessageTemplate.sendMessage(openId, build);  //setToUser("ovwMI59y1dfGKq2kJ9yDn96-kUPM");
                                         wxEmMsg.setWxMsgStatus("1");
                                         wxEmMsgMapper.updateByPrimaryKeySelective(wxEmMsg);
+                                        loger.info("微信端 成绩重新推送到 学号为 {},名字： {}", stuNum, stuName);
                                     } catch (Exception e) {
-                                        loger.info("微信端 重新推送失败 {}", e.getMessage());
+                                       pushExceton(e);
                                     }
-                                    loger.info("微信端 成绩重新推送到 学号为 {},名字： {}", stuNum, stuName);
                                 } else {
                                     loger.info("学号={} 已经推送过了",stuNum);
                                 }
@@ -226,6 +227,16 @@ public class ScoreSheetController {
         map.put("code",0);
         map.put("msg","上传成功！");
         return map;
+    }
+    private void pushExceton(Exception e){
+        String message = e.getMessage();
+        JSONObject parseObject = JSONObject.parseObject(message);
+        Integer errcode = parseObject.getInteger("errcode");
+        if (errcode == 45015) {
+            loger.info("微信端 推送失败 {}","原因是当用户微信不活跃时间超过24小时（此时间当前是多少由腾讯定），不会将信息推送到用户微信公众号。");
+        } else {
+            loger.info("微信端 推送失败 {}", message);
+        }
     }
 
     private WxUserMessage buildView() {
